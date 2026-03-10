@@ -1,6 +1,6 @@
 services:
   #streetcats-fe:
-  #streetcats-be:
+  #streetcats-api:
   #minio:
   postgis:
     build: ./databases
@@ -15,7 +15,10 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - postgis_network
+      postgis_network:
+        aliases:
+          - postgis.local
+      
   postgres:
     image: postgres:15
     container_name: keycloak_postgres

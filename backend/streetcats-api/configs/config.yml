@@ -1,0 +1,46 @@
+---
+api:
+  host: "0.0.0.0"
+  port: 8201
+  name: "Street Cats API Service"
+  version: "v0.1.0"
+  swagger:
+    enabled: true
+    auth:
+      enabled: true
+      user: "streetcats"
+      passwd: "streetcats"
+postgis:
+  enabled: true
+  host: "postgis.local"
+  dbname: "gis"
+  user: "postgres"
+  passwd: "postgres"
+  port: 5432
+  logger:
+    enable: false
+    level: "INFO"
+redis:
+  enabled: true
+  host: "redis.local"
+  port: 6379
+  passwd: "streetcats"
+nats:
+  enabled: true
+  host: "nats.local"
+  port: 4820
+  user: "streetcats"
+  passwd: "streetcats"
+log:
+  level: "INFO"
+  time_format: "2006-01-02 15:04:05"
+keycloak:
+  enabled: true
+  host: "http://keycloak.local"
+  port: 8080
+  client_id: "TODO"
+  client_secret: "TODO"
+  realm: "streetcats"
+  basic_auth:
+    user: "streetcats"
+    passwd: "streetcats"

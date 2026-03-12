@@ -3,6 +3,8 @@ package middlewares
 import (
 	"strings"
 
+	"streetcats-api/configs"
+
 	"github.com/Nerzal/gocloak/v13"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

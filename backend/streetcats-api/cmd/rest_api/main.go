@@ -5,13 +5,9 @@ import (
 	"streetcats-api/api/server"
 	"streetcats-api/api/server/router"
 	"streetcats-api/configs"
-	"streetcats-api/internal/repositories/vehicle"
-	"streetcats-api/internal/services/email"
-	"streetcats-api/pkg/eureka"
 	"streetcats-api/pkg/logger"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 //	@title			Notification Service
@@ -41,33 +37,14 @@ import (
 // @schemes	http
 func main() {
 	ctx := context.Background()
-	sh := configs.NewServiceHub(ctx)
-
-	// eureka configuration
-	e := eureka.NewClient(sh.Config.Eureka.Enabled,
-		eureka.WithMachines(sh.Config.Eureka.Machines),
-		eureka.WithHostName(sh.Config.Eureka.HostName),
-		eureka.WithHost(sh.Config.Eureka.Host, sh.Config.Eureka.Port),
-		eureka.WithVipAddress(sh.Config.Eureka.VipAddress),
-		eureka.WithSecureVipAddress(sh.Config.Eureka.SecureVipAddress),
-		eureka.WithHomePageUrl(sh.Config.Eureka.HomePageUrl),
-		eureka.WithHealthCheckUrl(sh.Config.Eureka.HealthCheckUrl),
-		eureka.WithStatusPageUrl(sh.Config.Eureka.StatusPageUrl),
-		eureka.WithDataCenterInfo(sh.Config.Eureka.DataCenterInfo),
-		eureka.WithApp(sh.Config.Eureka.App),
-		eureka.WithZapLogger(sh.Log),
-	)
-
-	fargo, err := e.BuildFargoInstance()
+	sh, err := configs.NewServiceHub(ctx)
 	if err != nil {
-		sh.Log.Info("Failed to build fargo", zap.Error(err))
 		panic(err)
 	}
-	fargo.Register()
 
 	defer sh.Log.Sync() // ignore creation of error statement
 	// gin config
-	gin.SetMode(setGinMode(sh))
+	gin.SetMode("release")
 	zapWriter := &logger.ZapGinWriter{Logger: sh.Log}
 
 	gin.DefaultWriter = zapWriter
@@ -75,13 +52,6 @@ func main() {
 
 	// router configuration
 	r := router.NewRouter(zapWriter, sh)
-
-	// emailConfiguration
-	vhRepo := vehicle.NewVehicleRepository(sh.PgCoreDbSession, sh.Log)
-	emailService := email.NewEmailService(sh.Log, sh.RedisClient, sh.Email, sh.Config.Email, vhRepo)
-	wk := email.NewEmailWorker(emailService, sh.RedisClient, sh.Log)
-
-	go wk.Run(ctx)
 
 	// server configuration
 	sh.Log.Info("starting server configuration")
@@ -98,12 +68,4 @@ func main() {
 	)
 
 	s.Serve()
-}
-
-func setGinMode(sh *configs.ServiceHub) string {
-	env := sh.GetEnvironment()
-	if env == "prod" {
-		return gin.ReleaseMode
-	}
-	return gin.DebugMode
 }

@@ -19,7 +19,7 @@ func (c *Controller) RegisterUser(ctx *gin.Context) {
 	}
 
 	c.usersService.SetContext(ctx)
-	err = c.usersService.CreateUser(request.Username, request.Language, request.FirstName, request.LastName)
+	err = c.usersService.CreateUser(request)
 	if err != nil {
 		c.log.Error("failed to create user")
 		c.jinres.InternalServerError().Done(ctx)

@@ -29,5 +29,5 @@ func (r *Register) UserRoutes() {
 
 	userGroup := r.router.Group("/user")
 
-	userGroup.PATCH("/register", controller.RegisterUser)
+	userGroup.POST("/register", controller.RegisterUser)
 }

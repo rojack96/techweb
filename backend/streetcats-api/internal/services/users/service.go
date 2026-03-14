@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"streetcats-api/configs"
+	"streetcats-api/internal/dto"
 	"streetcats-api/internal/repositories/users"
 
 	"github.com/Nerzal/gocloak/v13"
@@ -12,7 +13,7 @@ import (
 
 type ServiceInterfaces interface {
 	SetContext(ctx any)
-	CreateUser(username string, language, firstName, lastName *string) error
+	CreateUser(account dto.AccountDTO) error
 	// GetUser(userID string) (*gocloak.User, error)
 	// UpdateUser(userID string, user *gocloak.User) error
 	// DeleteUser(userID string) error
@@ -44,13 +45,13 @@ func NewUsersService(
 	//rds *redis.Client,
 	userRepository users.Repository,
 ) *Service {
-	return &Service{log: log, kc: kc, userRepository: userRepository}
+	return &Service{log: log, cfg: &cfg, kc: kc, userRepository: userRepository}
 }
 
-func (s *Service) createKeycloakUser(username string, language, firstName, lastName *string) error {
+func (s *Service) createKeycloakUser(username, email, password string, language, firstName, lastName *string) error {
 	// retrieve admin token
-	// TODO user configuration for keycloak
-	token, err := s.kc.LoginAdmin(s.ctx, "admin", "password", s.cfg.Keycloak.Realm)
+	realm := s.cfg.Keycloak.Realm
+	token, err := s.kc.LoginAdmin(s.ctx, s.cfg.Keycloak.User, s.cfg.Keycloak.Passwd, realm)
 	if err != nil {
 		return err
 	}
@@ -60,7 +61,12 @@ func (s *Service) createKeycloakUser(username string, language, firstName, lastN
 		"language": {getStringValue(language)},
 	}
 
-	user := gocloak.User{Username: gocloak.StringP(username), Attributes: &attr}
+	user := gocloak.User{
+		Username:   gocloak.StringP(username),
+		Email:      gocloak.StringP(email),
+		Attributes: &attr,
+		Enabled:    gocloak.BoolP(true),
+	}
 
 	if firstName != nil {
 		user.FirstName = firstName
@@ -69,9 +75,14 @@ func (s *Service) createKeycloakUser(username string, language, firstName, lastN
 		user.LastName = lastName
 	}
 
-	_, err = s.kc.CreateUser(s.ctx, token.AccessToken, "streetcats", user)
+	userID, err := s.kc.CreateUser(s.ctx, token.AccessToken, realm, user)
 	if err != nil {
 		s.log.Error("Failed to create user in Keycloak", zap.Error(err))
+		return err
+	}
+
+	err = s.kc.SetPassword(s.ctx, token.AccessToken, userID, realm, password, false)
+	if err != nil {
 		return err
 	}
 
@@ -79,15 +90,15 @@ func (s *Service) createKeycloakUser(username string, language, firstName, lastN
 	return nil
 }
 
-func (s *Service) CreateUser(username string, language, firstName, lastName *string) error {
+func (s *Service) CreateUser(account dto.AccountDTO) error {
 
-	err := s.createKeycloakUser(username, language, firstName, lastName)
+	err := s.createKeycloakUser(account.Username, account.Email, account.Password, account.Language, account.FirstName, account.LastName)
 	if err != nil {
 		return err
 	}
 
 	// Create user in local database
-	accountProfile, err := s.userRepository.CreateUser(username, language, firstName, lastName)
+	accountProfile, err := s.userRepository.CreateUser(account.Username, account.Email, account.Language, account.FirstName, account.LastName)
 	if err != nil {
 		s.log.Error("Failed to create user in local database", zap.Error(err))
 		return err

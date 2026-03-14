@@ -30,7 +30,7 @@ func NewUsersRepository(pg *pgxpool.Pool) Repository {
 	return &usersRepositoryImpl{pg: pg}
 }
 
-func (r *usersRepositoryImpl) CreateUser(username string, language, firstName, lastName *string) (*entities.AccountProfile, error) {
+func (r *usersRepositoryImpl) CreateUser(username, email string, language, firstName, lastName *string) (*entities.AccountProfile, error) {
 	tx, err := r.pg.BeginTx(r.ctx, pgx.TxOptions{})
 	if err != nil {
 		return nil, err
@@ -50,10 +50,10 @@ func (r *usersRepositoryImpl) CreateUser(username string, language, firstName, l
 	)
 
 	err = tx.QueryRow(r.ctx,
-		`INSERT INTO users.accounts (username, language)
-		VALUES ($1, $2)
+		`INSERT INTO users.accounts (username, email, language)
+		VALUES ($1, $2, $3)
 		RETURNING id, created_at, updated_at`,
-		username, language).Scan(&accountID, &createdAt, &updatedAt)
+		username, email, language).Scan(&accountID, &createdAt, &updatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +77,7 @@ func (r *usersRepositoryImpl) CreateUser(username string, language, firstName, l
 	account := entities.Account{
 		ID:        accountID,
 		Username:  username,
+		Email:     email,
 		Language:  language,
 		CreatedAt: createdAt,
 		UpdatedAt: updatedAt,

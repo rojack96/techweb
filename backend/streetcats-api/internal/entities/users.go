@@ -5,6 +5,7 @@ import "time"
 type Account struct {
 	ID        uint64    `db:"id"`
 	Username  string    `db:"username"`
+	Email     string    `db:"email"`
 	Language  *string   `db:"language"`
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`

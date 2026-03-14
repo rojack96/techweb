@@ -30,7 +30,7 @@ func NewRouter(zapWriter *logger.ZapGinWriter, sh *configs.ServiceHub) *gin.Engi
 	})
 
 	//handlers
-	const PrefixPath = "/notification-service/api/v1/"
+	const PrefixPath = "/streetcats-service/api/v1/"
 	apiGroup := r.Group(PrefixPath)
 	if sh.Config.Keycloak.Enabled {
 		apiGroup.Use(middlewares.Auth(sh.Config, sh.Keycloak, PrefixPath))

@@ -15,7 +15,7 @@ func Auth(config configs.ConfigModel, client *gocloak.GoCloak, prefixPath string
 	// This is a workaround to disable a Keycloak auth on a specific path
 	// in that case is a path with another auth mode (basic auth)
 	skipPaths := []string{
-		"notification/event",
+		"user/register",
 	}
 
 	return func(ctx *gin.Context) {

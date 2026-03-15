@@ -1,0 +1,1 @@
+- non dimenticare di inserire su keycloak tutta la config per streetcats realm

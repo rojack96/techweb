@@ -4,11 +4,12 @@ import (
 	"streetcats-api/internal/dto"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
-func (c *Controller) RegisterUser(ctx *gin.Context) {
+func (c *Controller) ResetPassword(ctx *gin.Context) {
 	var (
-		request dto.AccountDTO
+		request dto.ResetPasswordDTO
 		err     error
 	)
 
@@ -18,12 +19,12 @@ func (c *Controller) RegisterUser(ctx *gin.Context) {
 		return
 	}
 
-	err = c.usersService.CreateUser(ctx.Request.Context(), request)
+	err = c.usersService.ResetPassword(ctx.Request.Context(), request.Identifier, request.NewPassword)
 	if err != nil {
-		c.log.Error("failed to create user")
+		c.log.Error("failed to reset password", zap.Error(err))
 		c.jinres.InternalServerError().Done(ctx)
 		return
 	}
 
-	c.jinres.Created().Message("User registered").Done(ctx)
+	c.jinres.OK().Message("Password reset successfully").Done(ctx)
 }

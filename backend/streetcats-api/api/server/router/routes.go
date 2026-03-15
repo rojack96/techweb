@@ -30,4 +30,6 @@ func (r *Register) UserRoutes() {
 	userGroup := r.router.Group("/user")
 
 	userGroup.POST("/register", controller.RegisterUser)
+	userGroup.POST("/reset-password", controller.ResetPassword)
+	userGroup.GET("/username/:email", controller.GetUsernameByEmail)
 }

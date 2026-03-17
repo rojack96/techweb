@@ -52,6 +52,8 @@ type KEYCLOAK struct {
 	Enabled      bool   `json:"enabled" yaml:"enabled"`
 	Host         string `json:"host" yaml:"host"`
 	Port         uint16 `json:"port" yaml:"port"`
+	User         string `json:"user" yaml:"user"`
+	Passwd       string `json:"passwd" yaml:"passwd"`
 	ClientId     string `json:"client_id" yaml:"client_id"`
 	ClientSecret string `json:"client_secret" yaml:"client_secret"`
 	Realm        string `json:"realm" yaml:"realm"`
@@ -69,7 +71,7 @@ type LOG struct {
 
 type ConfigModel struct {
 	Api      API      `json:"api" yaml:"api"`
-	Postgis  POSTGIS  `json:"core_db" yaml:"core_db"`
+	Postgis  POSTGIS  `json:"postgis" yaml:"postgis"`
 	Redis    REDIS    `json:"redis_db" yaml:"redis_db"`
 	Log      LOG      `json:"log" yaml:"log"`
 	Nats     NATS     `json:"nats" yaml:"nats"`

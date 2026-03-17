@@ -12,7 +12,8 @@ api:
       passwd: "streetcats"
 postgis:
   enabled: true
-  host: "postgis.local"
+  #host: "postgis.local"
+  host: "localhost"
   dbname: "gis"
   user: "postgres"
   passwd: "postgres"
@@ -36,11 +37,14 @@ log:
   time_format: "2006-01-02 15:04:05"
 keycloak:
   enabled: true
-  host: "http://keycloak.local"
+  #host: "http://keycloak.local"
+  host: "http://localhost"
   port: 8080
-  client_id: "TODO"
-  client_secret: "TODO"
+  user: "admin"
+  passwd: "streetcats-api"
   realm: "streetcats"
+  client_id: "streetcats-service"
+  client_secret: "RABy7tW63YWEREX85yHsNnhkbGnFKVfg"
   basic_auth:
     user: "streetcats"
     passwd: "streetcats"

@@ -44,7 +44,7 @@ func main() {
 
 	defer sh.Log.Sync() // ignore creation of error statement
 	// gin config
-	gin.SetMode("release")
+	gin.SetMode("debug")
 	zapWriter := &logger.ZapGinWriter{Logger: sh.Log}
 
 	gin.DefaultWriter = zapWriter

@@ -7,7 +7,7 @@ import {
     VideoCameraOutlined,
 } from "@ant-design/icons"
 import { Button, Layout, Menu, theme } from "antd"
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 
 const { Header, Sider, Content } = Layout
 
@@ -16,13 +16,14 @@ const { Header, Sider, Content } = Layout
 // Il contenuto principale viene renderizzato all'interno del componente Outlet, che è un placeholder per i componenti figli definiti nelle rotte.
 export function AppLayout() {
     const [collapsed, setCollapsed] = useState(true)
+    const navigate = useNavigate()
 
     const {
-        token: { colorBgContainer, borderRadiusLG },
+        token: { colorBgContainer },
     } = theme.useToken()
 
     return (
-        <Layout>
+        <Layout style={{ minHeight: "100vh" }}>
             <Sider trigger={null} collapsible collapsed={collapsed}>
                 <Menu
                     theme="dark"
@@ -38,19 +39,26 @@ export function AppLayout() {
 
             <Layout>
                 <Header style={{ padding: 0, background: colorBgContainer }}>
-                    <Button
-                        type="text"
-                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                        onClick={() => setCollapsed(!collapsed)}
-                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 16px 16px 16px' }}>
+                        <Button
+                            type="text"
+                            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                            onClick={() => setCollapsed(!collapsed)}
+                        />
+                        <Button
+                            type="text"
+                            icon={<UserOutlined />}
+                            onClick={() => navigate('/login')}
+                        />
+                    </div>
                 </Header>
 
                 <Content
                     style={{
-                        margin: "24px 16px",
-                        padding: 24,
+                        margin: "0",
+                        padding: "0",
                         background: colorBgContainer,
-                        borderRadius: borderRadiusLG,
+                        minHeight: "calc(100vh - 64px)", // header altezza 64px se usi default
                     }}
                 >
                     <Outlet />

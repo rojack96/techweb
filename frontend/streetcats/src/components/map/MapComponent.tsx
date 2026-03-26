@@ -6,8 +6,8 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 export function MapComponent() {
     return (
         <MapContainer
-            center={[40.82922739413729, 14.189834511099555]}
-            zoom={27}
+            center={[42.5, 12.5]}
+            zoom={6}
             scrollWheelZoom={true}
             style={{ height: "100%", width: "100%" }}
         >
@@ -24,17 +24,17 @@ export function MapComponent() {
             />
 
             <MarkerClusterGroup>
-                <CustomMarkers positions={[
-                    [40.851112, 14.268901],
-                    [40.843567, 14.255432],
-                    [40.862345, 14.272198],
-                    [40.836789, 14.243567],
-                    [40.857901, 14.289345],
-                    [40.869234, 14.261987],
-                    [40.828765, 14.235678],
-                    [40.874512, 14.277654],
-                    [40.845678, 14.298765],
-                    [40.833456, 14.259876],
+                <CustomMarkers markers={[
+                    { position: [40.851112, 14.268901], markerText: "Cat sighting 1" },
+                    { position: [40.843567, 14.255432], markerText: "Cat sighting 2" },
+                    { position: [40.862345, 14.272198], markerText: "Cat sighting 3" },
+                    { position: [40.836789, 14.243567], markerText: "Cat sighting 4" },
+                    { position: [40.857901, 14.289345], markerText: "Cat sighting 5" },
+                    { position: [40.869234, 14.261987], markerText: "Cat sighting 6" },
+                    { position: [40.828765, 14.235678], markerText: "Cat sighting 7" },
+                    { position: [40.874512, 14.277654], markerText: "Cat sighting 8" },
+                    { position: [40.845678, 14.298765], markerText: "Cat sighting 9" },
+                    { position: [40.833456, 14.259876], markerText: "Cat sighting 10" },
                 ]} />
             </MarkerClusterGroup>
         </MapContainer>

@@ -3,29 +3,30 @@ import { MapComponent } from "../components/map/MapComponent"
 
 export function HomePage() {
     return (
-        <Row gutter={[16, 16]} justify="center" align="top">
-            <Col xs={24} md={6} lg={6}>
-                <div style={{ minHeight: "520px", maxHeight: "600px", border: "1px solid #f0f0f0", padding: 12 }}>
-                    Lista sinistra
-                </div>
-            </Col>
+        <div>
+            <Row gutter={[16, 16]} justify="center" align="top">
+                <Col xs={24} md={6} lg={6}>
+                    <div style={{
+                        minHeight: "90vh",
+                        maxHeight: "90vh",
+                        border: "10px solid #f0f0f0",
+                        padding: 12
+                    }}>
+                        Lista sinistra dove ci saranno tutti i gatti
+                    </div>
+                </Col>
 
-            <Col xs={24} md={12} lg={12}>
-                <div style={{
-                    height: "700px",
-                    width: "100%",
-                    border: "1px solid #f0f0f0",
-                    overflow: "hidden",
-                }}>
-                    <MapComponent />
-                </div>
-            </Col>
-
-            <Col xs={24} md={6} lg={6}>
-                <div style={{ minHeight: "80vh", border: "1px solid #f0f0f0", padding: 12 }}>
-                    Lista destra
-                </div>
-            </Col>
-        </Row >
+                <Col xs={24} md={12} lg={18}>
+                    <div style={{
+                        height: "90vh",
+                        width: "130vh",
+                        border: "1px solid #f0f0f0",
+                        overflow: "hidden",
+                    }}>
+                        <MapComponent />
+                    </div>
+                </Col>
+            </Row >
+        </div>
     )
 }

@@ -8,7 +8,7 @@ export function MapComponent() {
         <MapContainer
             center={[40.82922739413729, 14.189834511099555]}
             zoom={27}
-            scrollWheelZoom={false}
+            scrollWheelZoom={true}
             style={{ height: "100%", width: "100%" }}
         >
             {/* Satellite layer*/}

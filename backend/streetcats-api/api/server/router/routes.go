@@ -16,12 +16,13 @@ import (
 )
 
 type Register struct {
-	router *gin.RouterGroup
-	sh     *configs.ServiceHub
+	publicRouter    *gin.RouterGroup
+	protectedRouter *gin.RouterGroup
+	sh              *configs.ServiceHub
 }
 
-func NewRegister(router *gin.RouterGroup, sh *configs.ServiceHub) *Register {
-	return &Register{router: router, sh: sh}
+func NewRegister(publicRouter *gin.RouterGroup, protectedRouter *gin.RouterGroup, sh *configs.ServiceHub) *Register {
+	return &Register{publicRouter: publicRouter, protectedRouter: protectedRouter, sh: sh}
 }
 
 func (r *Register) UserRoutes() {
@@ -30,7 +31,7 @@ func (r *Register) UserRoutes() {
 	usersService := us.NewUsersService(r.sh.Log, r.sh.Config, r.sh.Keycloak, usersRepo)
 	controller := controllers.NewController(r.sh.Log, usersService)
 
-	userGroup := r.router.Group("/user")
+	userGroup := r.protectedRouter.Group("/user")
 
 	userGroup.POST("/register", controller.RegisterUser)
 	userGroup.POST("/reset-password", controller.ResetPassword)
@@ -42,6 +43,6 @@ func (r *Register) SightingRoutes() {
 	sightingsService := ss.NewService(r.sh.Log, r.sh.Config, r.sh.Keycloak, sightingsRepo)
 	controller := sc.NewController(r.sh.Log, sightingsService)
 
-	sightingsGroup := r.router.Group("/sightings")
+	sightingsGroup := r.publicRouter.Group("/sightings")
 	sightingsGroup.GET("/:animalID/all", controller.AllSightings)
 }

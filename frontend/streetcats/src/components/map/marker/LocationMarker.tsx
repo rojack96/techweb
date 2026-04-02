@@ -1,23 +1,19 @@
 import { useMapEvents } from "react-leaflet"
-import { useState } from "react"
-import type { LatLng } from 'leaflet'
-import { CatMarker } from "./Marker"
 
-export function LocationMarker() {
-    const [position, setPosition] = useState<LatLng | null>(null)
+interface LocationMarkerProps {
+    active: boolean
+    onMarkerPlaced: (position: [number, number]) => void
+}
 
+export function LocationMarker({ active, onMarkerPlaced }: LocationMarkerProps) {
     useMapEvents({
         click(e) {
-            console.log("Clicked at: ", e.latlng)
-            setPosition(e.latlng)
+            if (!active) return
+            const pos: [number, number] = [e.latlng.lat, e.latlng.lng]
+            //console.log("Clicked at: ", pos)
+            onMarkerPlaced(pos)
         },
     })
 
-
-    return position ?
-        <CatMarker
-            key=""
-            position={[position.lat, position.lng]}
-            markerText="Your Marker Text" />
-        : null
+    return null
 }

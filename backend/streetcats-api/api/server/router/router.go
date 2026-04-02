@@ -38,6 +38,7 @@ func NewRouter(zapWriter *logger.ZapGinWriter, sh *configs.ServiceHub) *gin.Engi
 
 	register := NewRegister(apiGroup, sh)
 	register.UserRoutes()
+	register.SightingRoutes()
 
 	return r
 }

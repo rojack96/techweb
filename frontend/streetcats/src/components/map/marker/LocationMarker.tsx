@@ -10,7 +10,7 @@ export function LocationMarker({ active, onMarkerPlaced }: LocationMarkerProps) 
         click(e) {
             if (!active) return
             const pos: [number, number] = [e.latlng.lat, e.latlng.lng]
-            //console.log("Clicked at: ", pos)
+            console.log("Clicked at: ", pos)
             onMarkerPlaced(pos)
         },
     })

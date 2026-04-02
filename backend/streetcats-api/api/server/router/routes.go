@@ -5,7 +5,10 @@ import (
 	// project imports
 	"streetcats-api/configs"
 	"streetcats-api/internal/controllers"
+	sc "streetcats-api/internal/controllers/sightings"
+	sr "streetcats-api/internal/repositories/sightings"
 	"streetcats-api/internal/repositories/users"
+	ss "streetcats-api/internal/services/sightings"
 	us "streetcats-api/internal/services/users"
 
 	// external imports
@@ -32,4 +35,13 @@ func (r *Register) UserRoutes() {
 	userGroup.POST("/register", controller.RegisterUser)
 	userGroup.POST("/reset-password", controller.ResetPassword)
 	userGroup.GET("/username/:email", controller.GetUsernameByEmail)
+}
+
+func (r *Register) SightingRoutes() {
+	sightingsRepo := sr.NewRepository(r.sh.Postgis)
+	sightingsService := ss.NewService(r.sh.Log, r.sh.Config, r.sh.Keycloak, sightingsRepo)
+	controller := sc.NewController(r.sh.Log, sightingsService)
+
+	sightingsGroup := r.router.Group("/sightings")
+	sightingsGroup.GET("/:animalID/all", controller.AllSightings)
 }

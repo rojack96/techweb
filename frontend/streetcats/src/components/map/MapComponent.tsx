@@ -2,6 +2,9 @@ import { MapContainer, TileLayer } from "react-leaflet"
 import { CustomMarkers } from "./marker/Marker"
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from "react-leaflet-cluster";
+import { LocationMarker } from "./marker/LocationMarker"
+
+
 
 export function MapComponent() {
     return (
@@ -22,6 +25,7 @@ export function MapComponent() {
                 attribution='&copy; Esri Map data © Esri — Sources: Esri, Maxar, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, Garmin, HERE, OpenStreetMap contributors, and the GIS User Community.'
                 url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}"
             />
+            <LocationMarker />
 
             <MarkerClusterGroup>
                 <CustomMarkers markers={[

@@ -1,5 +1,6 @@
 import L from "leaflet"
 import { Marker, Popup } from "react-leaflet"
+import { XMarkdown } from '@ant-design/x-markdown';
 import catMarkerUrl from "../../../assets/cat-svgrepo-com.svg"
 
 interface CustomMarkersProps {
@@ -26,7 +27,9 @@ export function CatMarker({ position, markerText }: CatMarkerProps) {
             icon={customIcon}
             position={position}
         >
-            <Popup>{markerText}</Popup>
+            <Popup>
+                <XMarkdown>{markerText}</XMarkdown>
+            </Popup>
         </Marker>
     )
 }

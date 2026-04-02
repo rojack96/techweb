@@ -42,8 +42,7 @@ func (s *Service) GetAllSightings(ctx context.Context) ([]dto.SightingDTO, error
 			ID:        sighting.ID,
 			AnimalID:  sighting.AnimalID,
 			BreedID:   sighting.BreedID,
-			Latitude:  sighting.Latitude,
-			Longitude: sighting.Longitude,
+			Position:  [2]float64{sighting.Latitude, sighting.Longitude},
 			SpottedAt: sighting.SpottedAt,
 		})
 	}

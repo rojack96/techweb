@@ -11,11 +11,12 @@ type sightingsRepositoryImpl struct {
 	pg *pgxpool.Pool
 }
 
-func (r *sightingsRepositoryImpl) GetAllSightings() ([]entities.Sighting, error) {
+func (r *sightingsRepositoryImpl) GetAllSightings() ([]entities.AnimalEntitiesView, error) {
 	ctx := context.Background()
 	query := `
-		SELECT id, animal_id, breed_id, latitude, longitude, spotted_at
-		FROM sightings.sightings
+		SELECT ae.id, ae.animal_id, b.name as breed, ae.latitude, ae.longitude, ae.title, ae.description, ae.spotted_at, ae.created_at
+		FROM sightings.animal_entities ae
+			LEFT JOIN sightings.breeds b ON ae.breed_id = b.id
 	`
 
 	rows, err := r.pg.Query(ctx, query)
@@ -24,16 +25,19 @@ func (r *sightingsRepositoryImpl) GetAllSightings() ([]entities.Sighting, error)
 	}
 	defer rows.Close()
 
-	var sightings []entities.Sighting
+	var sightings []entities.AnimalEntitiesView
 	for rows.Next() {
-		var sighting entities.Sighting
+		var sighting entities.AnimalEntitiesView
 		err := rows.Scan(
 			&sighting.ID,
 			&sighting.AnimalID,
-			&sighting.BreedID,
+			&sighting.Breed,
 			&sighting.Latitude,
 			&sighting.Longitude,
+			&sighting.Title,
+			&sighting.Description,
 			&sighting.SpottedAt,
+			&sighting.CreatedAt,
 		)
 		if err != nil {
 			return nil, err

@@ -5,5 +5,5 @@ import (
 )
 
 type Repository interface {
-	GetAllSightings() ([]entities.Sighting, error)
+	GetAllSightings() ([]entities.AnimalEntitiesView, error)
 }

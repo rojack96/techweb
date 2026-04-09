@@ -2,9 +2,11 @@ package sightings
 
 import (
 	"context"
+	"fmt"
 	"streetcats-api/configs"
 	"streetcats-api/internal/dto"
 	"streetcats-api/internal/repositories/sightings"
+	"strings"
 
 	"github.com/Nerzal/gocloak/v13"
 	"go.uber.org/zap"
@@ -38,12 +40,23 @@ func (s *Service) GetAllSightings(ctx context.Context) ([]dto.SightingDTO, error
 
 	var sightingDTOs []dto.SightingDTO
 	for _, sighting := range sightings {
+		if sighting.Breed == nil {
+			unknown := "unknown"
+			sighting.Breed = &unknown
+		}
+
+		breed := strings.ReplaceAll(*sighting.Breed, " ", "-")
+		// TODO verificarfe che serva
+		id := fmt.Sprintf("%s-%d", strings.ToLower(breed), sighting.ID)
+
 		sightingDTOs = append(sightingDTOs, dto.SightingDTO{
-			ID:        sighting.ID,
-			AnimalID:  sighting.AnimalID,
-			BreedID:   sighting.BreedID,
-			Position:  [2]float64{sighting.Latitude, sighting.Longitude},
-			SpottedAt: sighting.SpottedAt,
+			ID:          id,
+			SightingID:  sighting.ID,
+			Breed:       sighting.Breed,
+			Position:    [2]float64{sighting.Latitude, sighting.Longitude},
+			Title:       sighting.Title,
+			Description: sighting.Description,
+			SpottedAt:   sighting.SpottedAt,
 		})
 	}
 

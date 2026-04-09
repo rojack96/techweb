@@ -29,6 +29,8 @@ export function useMarkerForm() {
   const [selectedBreed, setSelectedBreed] = useState<string | undefined>(undefined)
   const [markerTitle, setMarkerTitle] = useState("")
   const [markerDescription, setMarkerDescription] = useState("")
+  const [detailSidebarOpen, setDetailSidebarOpen] = useState(false)
+  const [selectedMarkerForDetail, setSelectedMarkerForDetail] = useState<ExtraMarker | null>(null)
 
   const handleMarkerPlaced = (position: [number, number]) => {
     const id = Date.now().toString()
@@ -89,6 +91,19 @@ export function useMarkerForm() {
     setMarkerMode(false)
   }
 
+  const handleExpandMarker = (marker: { title: string; description: string; breed: string; id: string }) => {
+    const fullMarker = extraMarkers.find(m => m.id === marker.id)
+    if (fullMarker) {
+      setSelectedMarkerForDetail(fullMarker)
+      setDetailSidebarOpen(true)
+    }
+  }
+
+  const closeDetailSidebar = () => {
+    setDetailSidebarOpen(false)
+    setSelectedMarkerForDetail(null)
+  }
+
   return {
     // State
     markerMode,
@@ -98,6 +113,8 @@ export function useMarkerForm() {
     selectedBreed,
     markerTitle,
     markerDescription,
+    detailSidebarOpen,
+    selectedMarkerForDetail,
     // Setters
     setMarkerMode,
     setSidebarOpen,
@@ -109,5 +126,7 @@ export function useMarkerForm() {
     handleSave,
     handleCancel,
     closeSidebar,
+    handleExpandMarker,
+    closeDetailSidebar,
   }
 }

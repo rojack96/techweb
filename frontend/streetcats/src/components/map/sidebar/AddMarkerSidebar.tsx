@@ -99,9 +99,9 @@ export function AddMarkerSidebar({
                             }}
                         >
                             <small style={{ color: "#666", display: "block", marginBottom: 8 }}>
-                                Anteprima (prime 2-3 righe nel tooltip):
+                                Anteprima completa:
                             </small>
-                            <div style={{ fontSize: 12, maxHeight: 60, overflow: "hidden" }}>
+                            <div style={{ fontSize: 12 }}>
                                 <XMarkdown>{markerDescription}</XMarkdown>
                             </div>
                         </div>

@@ -5,6 +5,7 @@ import MarkerClusterGroup from "react-leaflet-cluster"
 import { LocationMarker } from "./marker/LocationMarker"
 import { InsertMarker } from "./button/InsertMarker"
 import { AddMarkerSidebar } from "./sidebar/AddMarkerSidebar"
+import { MarkerDetailSidebar } from "./sidebar/MarkerDetailSidebar"
 import { useMarkerForm } from "../../hooks/useMarkerForm"
 
 export function MapComponent() {
@@ -15,6 +16,8 @@ export function MapComponent() {
         selectedBreed,
         markerTitle,
         markerDescription,
+        detailSidebarOpen,
+        selectedMarkerForDetail,
         setMarkerMode,
         setSelectedBreed,
         setMarkerTitle,
@@ -23,6 +26,8 @@ export function MapComponent() {
         handleSave,
         handleCancel,
         closeSidebar,
+        handleExpandMarker,
+        closeDetailSidebar,
     } = useMarkerForm()
 
     return (
@@ -49,26 +54,31 @@ export function MapComponent() {
                     <LocationMarker active={markerMode} onMarkerPlaced={handleMarkerPlaced} />
 
                     <MarkerClusterGroup>
-                        <CustomMarkers markers={[
-                            { position: [40.851112, 14.268901], markerText: "Cat sighting 1" },
-                            { position: [40.843567, 14.255432], markerText: "Cat sighting 2" },
-                            { position: [40.862345, 14.272198], markerText: "Cat sighting 3" },
-                            { position: [40.836789, 14.243567], markerText: "Cat sighting 4" },
-                            { position: [40.857901, 14.289345], markerText: "Cat sighting 5" },
-                            { position: [40.869234, 14.261987], markerText: "Cat sighting 6" },
-                            { position: [40.828765, 14.235678], markerText: "Cat sighting 7" },
-                            { position: [40.874512, 14.277654], markerText: "Cat sighting 8" },
-                            { position: [40.845678, 14.298765], markerText: "Cat sighting 9" },
-                            { position: [40.833456, 14.259876], markerText: "Cat sighting 10" },
-                            ...extraMarkers.map(m => {
-                                // Limita la descrizione a 2-3 righe nel tooltip
-                                const descLines = m.description.split('\n').slice(0, 3).join('\n')
-                                return {
-                                    position: m.position,
-                                    markerText: `# ${m.title}\n\n**${m.breed}**\n\n${descLines}`
-                                }
-                            })
-                        ]} />
+                        <CustomMarkers
+                            markers={[
+                                { position: [40.851112, 14.268901], markerText: "Cat sighting 1" },
+                                { position: [40.843567, 14.255432], markerText: "Cat sighting 2" },
+                                { position: [40.862345, 14.272198], markerText: "Cat sighting 3" },
+                                { position: [40.836789, 14.243567], markerText: "Cat sighting 4" },
+                                { position: [40.857901, 14.289345], markerText: "Cat sighting 5" },
+                                { position: [40.869234, 14.261987], markerText: "Cat sighting 6" },
+                                { position: [40.828765, 14.235678], markerText: "Cat sighting 7" },
+                                { position: [40.874512, 14.277654], markerText: "Cat sighting 8" },
+                                { position: [40.845678, 14.298765], markerText: "Cat sighting 9" },
+                                { position: [40.833456, 14.259876], markerText: "Cat sighting 10" },
+                                ...extraMarkers.map(m => {
+                                    return {
+                                        position: m.position,
+                                        markerText: `# ${m.title}\n\n**${m.breed}**\n\n${m.description}`,
+                                        title: m.title,
+                                        description: m.description,
+                                        breed: m.breed,
+                                        id: m.id
+                                    }
+                                })
+                            ]}
+                            onExpand={handleExpandMarker}
+                        />
                     </MarkerClusterGroup>
                 </MapContainer>
             </div>
@@ -84,6 +94,12 @@ export function MapComponent() {
                 onDescriptionChange={setMarkerDescription}
                 onSave={handleSave}
                 onCancel={handleCancel}
+            />
+
+            <MarkerDetailSidebar
+                isOpen={detailSidebarOpen}
+                marker={selectedMarkerForDetail}
+                onClose={closeDetailSidebar}
             />
         </div>
     )

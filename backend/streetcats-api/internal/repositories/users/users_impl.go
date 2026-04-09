@@ -35,7 +35,8 @@ func (r *usersRepositoryImpl) CreateUser(ctx context.Context, account entities.A
 		`INSERT INTO users.accounts (username, email, language)
 		VALUES ($1, $2, $3)
 		RETURNING id, created_at, updated_at`,
-		account.Username, account.Email, account.Language).Scan(&account.ID, &account.CreatedAt, &account.UpdatedAt)
+		account.Username, account.Email, account.Language).
+		Scan(&account.ID, &account.CreatedAt, &account.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,8 @@ func (r *usersRepositoryImpl) CreateUser(ctx context.Context, account entities.A
 		err = tx.QueryRow(ctx,
 			`INSERT INTO users.profiles (user_id, first_name, last_name)
 			VALUES ($1, $2, $3)
-			RETURNING id`, account.ID, profile.FirstName, profile.LastName).
+			RETURNING id`,
+			account.ID, profile.FirstName, profile.LastName).
 			Scan(&pid)
 		if err != nil {
 			return nil, err

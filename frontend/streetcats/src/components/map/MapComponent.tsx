@@ -1,0 +1,163 @@
+import { MapContainer, TileLayer } from "react-leaflet"
+import { CustomMarkers } from "./marker/Marker"
+import "leaflet/dist/leaflet.css"
+import MarkerClusterGroup from "react-leaflet-cluster"
+import { LocationMarker } from "./marker/LocationMarker"
+import { InsertMarker } from "./button/InsertMarker"
+import { AddMarkerSidebar } from "./sidebar/AddMarkerSidebar"
+import { MarkerDetailSidebar } from "./sidebar/MarkerDetailSidebar"
+import { useMarkerForm } from "../../hooks/useMarkerForm"
+
+export function MapComponent() {
+    const {
+        markerMode,
+        sidebarOpen,
+        extraMarkers,
+        selectedBreed,
+        markerTitle,
+        markerDescription,
+        detailSidebarOpen,
+        selectedMarkerForDetail,
+        setMarkerMode,
+        setSelectedBreed,
+        setMarkerTitle,
+        setMarkerDescription,
+        handleMarkerPlaced,
+        handleSave,
+        handleCancel,
+        closeSidebar,
+        handleExpandMarker,
+        closeDetailSidebar,
+    } = useMarkerForm()
+
+    return (
+        <div style={{ display: "flex", height: "100%", width: "100%" }}>
+            <div style={{ position: "relative", flex: sidebarOpen ? "0 0 calc(100% - 450px)" : 1, transition: "flex 0.2s" }}>
+                <InsertMarker active={markerMode} onToggle={() => setMarkerMode(prev => !prev)} />
+                <MapContainer
+                    center={[42.5, 12.5]}
+                    zoom={6}
+                    scrollWheelZoom={true}
+                    style={{ height: "100%", width: "100%" }}
+                >
+                    {/* Satellite layer*/}
+                    <TileLayer
+                        attribution='&copy; Esri'
+                        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    />
+
+                    {/* Labels layer */}
+                    <TileLayer
+                        attribution='&copy; Esri Map data © Esri — Sources: Esri, Maxar, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, Garmin, HERE, OpenStreetMap contributors, and the GIS User Community.'
+                        url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}"
+                    />
+                    <LocationMarker active={markerMode} onMarkerPlaced={handleMarkerPlaced} />
+
+                    <MarkerClusterGroup>
+                        <CustomMarkers
+                            markers={[
+                                {
+                                    position: [40.851112, 14.268901],
+                                    title: "Cat sighting 1",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-1"
+                                },
+                                {
+                                    position: [40.843567, 14.255432],
+                                    title: "Cat sighting 2",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-2"
+                                },
+                                {
+                                    position: [40.862345, 14.272198],
+                                    title: "Cat sighting 3",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-3"
+                                },
+                                {
+                                    position: [40.836789, 14.243567],
+                                    title: "Cat sighting 4",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-4"
+                                },
+                                {
+                                    position: [40.857901, 14.289345],
+                                    title: "Cat sighting 5",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-5"
+                                },
+                                {
+                                    position: [40.869234, 14.261987],
+                                    title: "Cat sighting 6",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-6"
+                                },
+                                {
+                                    position: [40.828765, 14.235678],
+                                    title: "Cat sighting 7",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-7"
+                                },
+                                {
+                                    position: [40.874512, 14.277654],
+                                    title: "Cat sighting 8",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-8"
+                                },
+                                {
+                                    position: [40.845678, 14.298765],
+                                    title: "Cat sighting 9",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-9"
+                                },
+                                {
+                                    position: [40.833456, 14.259876],
+                                    title: "Cat sighting 10",
+                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
+                                    breed: "Sconosciuta",
+                                    id: "hardcoded-10"
+                                },
+                                ...extraMarkers.map(m => ({
+                                    position: m.position,
+                                    title: m.title,
+                                    description: m.description,
+                                    breed: m.breed,
+                                    id: m.id
+                                }))
+                            ]}
+                            onExpand={handleExpandMarker}
+                        />
+                    </MarkerClusterGroup>
+                </MapContainer>
+            </div>
+
+            <AddMarkerSidebar
+                isOpen={sidebarOpen}
+                selectedBreed={selectedBreed}
+                markerTitle={markerTitle}
+                markerDescription={markerDescription}
+                onClose={closeSidebar}
+                onBreedChange={setSelectedBreed}
+                onTitleChange={setMarkerTitle}
+                onDescriptionChange={setMarkerDescription}
+                onSave={handleSave}
+                onCancel={handleCancel}
+            />
+
+            <MarkerDetailSidebar
+                isOpen={detailSidebarOpen}
+                marker={selectedMarkerForDetail}
+                onClose={closeDetailSidebar}
+            />
+        </div>
+    )
+}

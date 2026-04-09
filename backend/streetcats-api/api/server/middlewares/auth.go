@@ -11,23 +11,8 @@ import (
 	"github.com/rojack96/jinres"
 )
 
-func Auth(config configs.ConfigModel, client *gocloak.GoCloak, prefixPath string) gin.HandlerFunc {
-	// This is a workaround to disable a Keycloak auth on a specific path
-	// in that case is a path with another auth mode (basic auth)
-	skipPaths := []string{
-		"user/register",
-	}
-
+func Auth(config configs.ConfigModel, client *gocloak.GoCloak) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		path := ctx.FullPath()
-
-		for _, skip := range skipPaths {
-			if path == prefixPath+skip {
-				ctx.Next()
-				return
-			}
-		}
-
 		jr := jinres.NewJinres()
 		bearerToken := ctx.GetHeader("Authorization")
 
@@ -63,6 +48,23 @@ func Auth(config configs.ConfigModel, client *gocloak.GoCloak, prefixPath string
 		claims, err := DecodeJWT(authToken)
 		if err == nil && claims != nil {
 			ctx.Set("claims", claims)
+		}
+
+		ctx.Next()
+	}
+}
+
+func BasicAuth(user, pass string) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		jr := jinres.NewJinres()
+		u, p, ok := ctx.Request.BasicAuth()
+
+		if !ok || u != user || p != pass {
+			ctx.Header("WWW-Authenticate", `Basic realm="restricted"`)
+
+			jr.Unauthorized().Done(ctx)
+			ctx.Abort()
+			return
 		}
 
 		ctx.Next()

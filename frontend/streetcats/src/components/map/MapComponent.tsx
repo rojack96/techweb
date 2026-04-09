@@ -58,7 +58,6 @@ export function MapComponent() {
                             markers={[
                                 {
                                     position: [40.851112, 14.268901],
-                                    markerText: "# Cat sighting 1 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 1",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -66,7 +65,6 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.843567, 14.255432],
-                                    markerText: "# Cat sighting 2 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 2",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -74,7 +72,6 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.862345, 14.272198],
-                                    markerText: "# Cat sighting 3 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 3",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -82,7 +79,6 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.836789, 14.243567],
-                                    markerText: "# Cat sighting 4 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 4",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -90,7 +86,6 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.857901, 14.289345],
-                                    markerText: "# Cat sighting 5 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 5",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -98,7 +93,6 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.869234, 14.261987],
-                                    markerText: "# Cat sighting 6 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 6",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -106,7 +100,6 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.828765, 14.235678],
-                                    markerText: "# Cat sighting 7 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 7",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -114,7 +107,6 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.874512, 14.277654],
-                                    markerText: "# Cat sighting 8 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 8",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -122,7 +114,6 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.845678, 14.298765],
-                                    markerText: "# Cat sighting 9 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 9",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
@@ -130,22 +121,18 @@ export function MapComponent() {
                                 },
                                 {
                                     position: [40.833456, 14.259876],
-                                    markerText: "# Cat sighting 10 \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     title: "Cat sighting 10",
                                     description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
                                     breed: "Sconosciuta",
                                     id: "hardcoded-10"
                                 },
-                                ...extraMarkers.map(m => {
-                                    return {
-                                        position: m.position,
-                                        markerText: `# ${m.title}\n\n**${m.breed}**\n\n${m.description}`,
-                                        title: m.title,
-                                        description: m.description,
-                                        breed: m.breed,
-                                        id: m.id
-                                    }
-                                })
+                                ...extraMarkers.map(m => ({
+                                    position: m.position,
+                                    title: m.title,
+                                    description: m.description,
+                                    breed: m.breed,
+                                    id: m.id
+                                }))
                             ]}
                             onExpand={handleExpandMarker}
                         />

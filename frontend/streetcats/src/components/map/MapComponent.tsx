@@ -12,6 +12,11 @@ const { TextArea } = Input
 const { Title } = Typography
 
 export function MapComponent() {
+    // setMarkerMode: se è attivo il posizionamento marker
+    // sidebarOpen: se la sidebar è aperta
+    // extraMarkers: array di marker aggiunti dall'utente
+    // pendingMarker: marker in fase di creazione
+    // selectedBreed: razza selezionata, notes: note inserite
     const [markerMode, setMarkerMode] = useState(false)
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [extraMarkers, setExtraMarkers] = useState<{ position: [number, number]; markerText: string; id: string }[]>([])

@@ -27,8 +27,10 @@ export function CatMarker({ position, markerText }: CatMarkerProps) {
             icon={customIcon}
             position={position}
         >
-            <Popup>
-                <XMarkdown>{markerText}</XMarkdown>
+            <Popup maxWidth={300} minWidth={250}>
+                <div style={{ fontSize: 14, lineHeight: 1.6, padding: 8 }}>
+                    <XMarkdown>{markerText}</XMarkdown>
+                </div>
             </Popup>
         </Marker>
     )

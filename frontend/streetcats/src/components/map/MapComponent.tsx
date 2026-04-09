@@ -1,79 +1,27 @@
-import { useState } from "react"
 import { MapContainer, TileLayer } from "react-leaflet"
 import { CustomMarkers } from "./marker/Marker"
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from "react-leaflet-cluster"
 import { LocationMarker } from "./marker/LocationMarker"
 import { InsertMarker } from "./button/InsertMarker"
-import { Card, Select, Input, Typography, Button, Space } from "antd"
-import { XMarkdown } from "@ant-design/x-markdown"
-
-const { TextArea } = Input
-const { Title } = Typography
+import { AddMarkerSidebar } from "../sidebar/AddMarkerSidebar"
+import { useMarkerForm } from "../../hooks/useMarkerForm"
 
 export function MapComponent() {
-    // setMarkerMode: se è attivo il posizionamento marker
-    // sidebarOpen: se la sidebar è aperta
-    // extraMarkers: array di marker aggiunti dall'utente
-    // pendingMarker: marker in fase di creazione
-    // selectedBreed: razza selezionata, notes: note inserite
-    const [markerMode, setMarkerMode] = useState(false)
-    const [sidebarOpen, setSidebarOpen] = useState(false)
-    const [extraMarkers, setExtraMarkers] = useState<{ position: [number, number]; markerText: string; id: string }[]>([])
-    const [pendingMarker, setPendingMarker] = useState<{ position: [number, number]; id: string } | null>(null)
-    const [selectedBreed, setSelectedBreed] = useState<string | undefined>(undefined)
-    const [notes, setNotes] = useState("")
-
-    const breedOptions = [
-        { value: "siamese", label: "Siamese" },
-        { value: "maine_coon", label: "Maine Coon" },
-        { value: "persian", label: "Persiano" },
-        { value: "ragdoll", label: "Ragdoll" },
-        { value: "sphynx", label: "Sphynx" },
-    ]
-
-    const handleMarkerPlaced = (position: [number, number]) => {
-        const id = Date.now().toString()
-        setExtraMarkers(prev => [...prev, { position, markerText: "Modifica...", id }])
-        setPendingMarker({ position, id })
-        setSidebarOpen(true)
-    }
-
-    const handleSave = () => {
-        if (!pendingMarker) return
-
-        const breedText = selectedBreed ? breedOptions.find(b => b.value === selectedBreed)?.label ?? selectedBreed : "Razza non selezionata"
-        const markerText = `${breedText}${notes ? ` - ${notes}` : ""}`
-
-        setExtraMarkers(prev =>
-            prev.map(marker =>
-                marker.id === pendingMarker.id
-                    ? { ...marker, markerText }
-                    : marker
-            )
-        )
-        resetForm()
-    }
-
-    const handleCancel = () => {
-        if (pendingMarker !== null) {
-            setExtraMarkers(prev => prev.filter(marker => marker.id !== pendingMarker.id))
-        }
-        resetForm()
-    }
-
-    const resetForm = () => {
-        setPendingMarker(null)
-        setSidebarOpen(false)
-        setMarkerMode(false)
-        setSelectedBreed(undefined)
-        setNotes("")
-    }
-
-    const closeSidebar = () => {
-        setSidebarOpen(false)
-        setMarkerMode(false)
-    }
+    const {
+        markerMode,
+        sidebarOpen,
+        extraMarkers,
+        selectedBreed,
+        notes,
+        setMarkerMode,
+        setSelectedBreed,
+        setNotes,
+        handleMarkerPlaced,
+        handleSave,
+        handleCancel,
+        closeSidebar,
+    } = useMarkerForm()
 
     return (
         <div style={{ display: "flex", height: "100%", width: "100%" }}>
@@ -116,55 +64,16 @@ export function MapComponent() {
                 </MapContainer>
             </div>
 
-            {sidebarOpen && (
-                <aside style={{
-                    width: 450,
-                    borderLeft: "1px solid #f0f0f0",
-                    background: "#fff",
-                    padding: 16,
-                    boxSizing: "border-box",
-                    overflowY: "auto"
-                }}>
-                    <Card size="small" title={<Title level={5}>Aggiungi Marker</Title>} extra={<button onClick={closeSidebar} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 18 }}>✕</button>}>
-                        <div style={{ marginBottom: 16 }}>
-                            <label style={{ display: "block", marginBottom: 8 }}>Razza</label>
-                            <Select
-                                value={selectedBreed}
-                                onChange={(value) => setSelectedBreed(value)}
-                                options={breedOptions}
-                                placeholder="Seleziona razza"
-                                style={{ width: "100%" }}
-                                allowClear
-                            />
-                        </div>
-                        <div style={{ marginBottom: 16 }}>
-                            <label style={{ display: "block", marginBottom: 8 }}>Note (Markdown)</label>
-                            <TextArea
-                                value={notes}
-                                onChange={(e) => setNotes(e.target.value)}
-                                rows={5}
-                                placeholder="Descrizione in markdown"
-                            />
-                            {notes && (
-                                <div style={{ marginTop: 12, border: "1px solid #d9d9d9", borderRadius: 4, padding: 12, background: "#fafafa" }}>
-                                    <small style={{ color: "#666", display: "block", marginBottom: 8 }}>Anteprima:</small>
-                                    <XMarkdown>{notes}</XMarkdown>
-                                </div>
-                            )}
-                        </div>
-                        <div>
-                            <Space style={{ width: "100%" }}>
-                                <Button type="primary" onClick={handleSave} style={{ flex: 1 }}>
-                                    Salva
-                                </Button>
-                                <Button onClick={handleCancel} style={{ flex: 1 }}>
-                                    Annulla
-                                </Button>
-                            </Space>
-                        </div>
-                    </Card>
-                </aside>
-            )}
+            <AddMarkerSidebar
+                isOpen={sidebarOpen}
+                selectedBreed={selectedBreed}
+                notes={notes}
+                onClose={closeSidebar}
+                onBreedChange={setSelectedBreed}
+                onNotesChange={setNotes}
+                onSave={handleSave}
+                onCancel={handleCancel}
+            />
         </div>
     )
 }

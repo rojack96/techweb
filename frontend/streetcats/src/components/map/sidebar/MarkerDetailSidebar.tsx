@@ -19,21 +19,34 @@ interface MarkerDetailSidebarProps {
 export function MarkerDetailSidebar({ isOpen, marker, onClose }: MarkerDetailSidebarProps) {
     // Simula lo stato di login - in futuro sarà collegato all'auth reale
     const [isLoggedIn] = useState(true) // Cambia a false per testare modalità non loggato
-    const [comments, setComments] = useState<string[]>([
-        "Ottimo avvistamento! Ho visto un gatto simile nella zona.",
-        "Grazie per la segnalazione, controllerò domani.",
-        "Il gatto sembra in buona salute, complimenti per la descrizione dettagliata!"
-    ])
+    const [comments, setComments] = useState<Record<string, string[]>>({
+        "hardcoded-1": [
+            "Ottimo avvistamento! Ho visto un gatto simile in zona.",
+            "Grazie per la segnalazione, controllerò domani."
+        ],
+        "hardcoded-2": [
+            "Il gatto sembra in buona salute, complimenti per la descrizione!"
+        ],
+        "hardcoded-3": [
+            "Ho visto questo gatto spesso da queste parti."
+        ]
+        // Altri marker avranno array vuoti per default
+    })
     const [newComment, setNewComment] = useState("")
 
-    if (!isOpen || !marker) return null
-
     const handleAddComment = () => {
-        if (newComment.trim()) {
-            setComments(prev => [...prev, newComment.trim()])
+        if (newComment.trim() && marker) {
+            setComments(prev => ({
+                ...prev,
+                [marker.id]: [...(prev[marker.id] || []), newComment.trim()]
+            }))
             setNewComment("")
         }
     }
+
+    if (!isOpen || !marker) return null
+
+    const markerComments = comments[marker.id] || []
 
     return (
         <aside
@@ -85,14 +98,14 @@ export function MarkerDetailSidebar({ isOpen, marker, onClose }: MarkerDetailSid
 
                 {/* Sezione commenti */}
                 <div>
-                    <Title level={5} style={{ marginBottom: 16 }}>Commenti ({comments.length})</Title>
+                    <Title level={5} style={{ marginBottom: 16 }}>Commenti ({markerComments.length})</Title>
 
                     {/* Lista commenti esistenti */}
                     <div style={{ marginBottom: 16, maxHeight: 200, overflowY: "auto" }}>
-                        {comments.length === 0 ? (
+                        {markerComments.length === 0 ? (
                             <Text type="secondary">Nessun commento ancora.</Text>
                         ) : (
-                            comments.map((comment, index) => (
+                            markerComments.map((comment, index) => (
                                 <div
                                     key={index}
                                     style={{

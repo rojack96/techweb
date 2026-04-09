@@ -33,7 +33,7 @@ interface CatMarkerProps {
 export function CatMarker({ position, markerText, title, description, breed, id, onExpand }: CatMarkerProps) {
     const hasFullData = title && description && breed && id
     const descLines = description ? description.split('\n').slice(0, 2).join('\n') : ''
-    const hasMoreContent = description && description.split('\n').length > 2
+    const shouldTruncate = description && description.split('\n').length > 2
 
     return (
         <Marker
@@ -46,27 +46,30 @@ export function CatMarker({ position, markerText, title, description, breed, id,
                         <>
                             <div style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>{title}</div>
                             <div style={{ fontWeight: 'bold', color: '#666', marginBottom: 8 }}>{breed}</div>
-                            <div style={{ marginBottom: hasMoreContent ? 12 : 0 }}>
-                                <XMarkdown>{descLines}</XMarkdown>
+                            <div style={{ marginBottom: 12 }}>
+                                <XMarkdown>{shouldTruncate ? descLines : description}</XMarkdown>
+                                {shouldTruncate && (
+                                    <div style={{ fontSize: 12, color: '#999', marginTop: 4 }}>
+                                        (continua...)
+                                    </div>
+                                )}
                             </div>
-                            {hasMoreContent && (
-                                <div style={{ marginTop: 12, textAlign: 'center' }}>
-                                    <button
-                                        onClick={() => onExpand?.({ title, description, breed, id })}
-                                        style={{
-                                            background: '#1890ff',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: 4,
-                                            padding: '4px 12px',
-                                            cursor: 'pointer',
-                                            fontSize: 12
-                                        }}
-                                    >
-                                        Leggi di più
-                                    </button>
-                                </div>
-                            )}
+                            <div style={{ marginTop: 12, textAlign: 'center' }}>
+                                <button
+                                    onClick={() => onExpand?.({ title, description, breed, id })}
+                                    style={{
+                                        background: '#1890ff',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: 4,
+                                        padding: '4px 12px',
+                                        cursor: 'pointer',
+                                        fontSize: 12
+                                    }}
+                                >
+                                    Leggi di più
+                                </button>
+                            </div>
                         </>
                     ) : (
                         <XMarkdown>{markerText}</XMarkdown>

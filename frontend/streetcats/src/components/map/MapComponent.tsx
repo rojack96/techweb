@@ -7,6 +7,7 @@ import { InsertMarker } from "./button/InsertMarker"
 import { AddMarkerSidebar } from "./sidebar/AddMarkerSidebar"
 import { MarkerDetailSidebar } from "./sidebar/MarkerDetailSidebar"
 import { useMarkerForm } from "../../hooks/useMarkerForm"
+import { useSightings } from "../../features/sightings/hooks"
 
 export function MapComponent() {
     const {
@@ -29,6 +30,16 @@ export function MapComponent() {
         handleExpandMarker,
         closeDetailSidebar,
     } = useMarkerForm()
+
+    const { data: sightings, isLoading, error } = useSightings()
+    console.log("Sightings:", sightings, "Loading:", isLoading, "Error:", error)
+    const sightingMarkers = sightings?.response?.map(sighting => ({
+        position: sighting.position,
+        title: sighting.title,
+        description: sighting.description,
+        breed: sighting.breed,
+        id: sighting.id,
+    })) ?? []
 
     return (
         <div style={{ display: "flex", height: "100%", width: "100%" }}>
@@ -55,85 +66,7 @@ export function MapComponent() {
 
                     <MarkerClusterGroup>
                         <CustomMarkers
-                            markers={[
-                                {
-                                    position: [40.851112, 14.268901],
-                                    title: "Cat sighting 1",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-1"
-                                },
-                                {
-                                    position: [40.843567, 14.255432],
-                                    title: "Cat sighting 2",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-2"
-                                },
-                                {
-                                    position: [40.862345, 14.272198],
-                                    title: "Cat sighting 3",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-3"
-                                },
-                                {
-                                    position: [40.836789, 14.243567],
-                                    title: "Cat sighting 4",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-4"
-                                },
-                                {
-                                    position: [40.857901, 14.289345],
-                                    title: "Cat sighting 5",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-5"
-                                },
-                                {
-                                    position: [40.869234, 14.261987],
-                                    title: "Cat sighting 6",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-6"
-                                },
-                                {
-                                    position: [40.828765, 14.235678],
-                                    title: "Cat sighting 7",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-7"
-                                },
-                                {
-                                    position: [40.874512, 14.277654],
-                                    title: "Cat sighting 8",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-8"
-                                },
-                                {
-                                    position: [40.845678, 14.298765],
-                                    title: "Cat sighting 9",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-9"
-                                },
-                                {
-                                    position: [40.833456, 14.259876],
-                                    title: "Cat sighting 10",
-                                    description: "ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone \n\n ciaone sono un gattone",
-                                    breed: "Sconosciuta",
-                                    id: "hardcoded-10"
-                                },
-                                ...extraMarkers.map(m => ({
-                                    position: m.position,
-                                    title: m.title,
-                                    description: m.description,
-                                    breed: m.breed,
-                                    id: m.id
-                                }))
-                            ]}
+                            markers={[...sightingMarkers]}
                             onExpand={handleExpandMarker}
                         />
                     </MarkerClusterGroup>

@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from "react-leaflet-cluster"
 import { LocationMarker } from "./marker/LocationMarker"
 import { InsertMarker } from "./button/InsertMarker"
-import { AddMarkerSidebar } from "../sidebar/AddMarkerSidebar"
+import { AddMarkerSidebar } from "./sidebar/AddMarkerSidebar"
 import { useMarkerForm } from "../../hooks/useMarkerForm"
 
 export function MapComponent() {
@@ -13,10 +13,12 @@ export function MapComponent() {
         sidebarOpen,
         extraMarkers,
         selectedBreed,
-        notes,
+        markerTitle,
+        markerDescription,
         setMarkerMode,
         setSelectedBreed,
-        setNotes,
+        setMarkerTitle,
+        setMarkerDescription,
         handleMarkerPlaced,
         handleSave,
         handleCancel,
@@ -58,7 +60,14 @@ export function MapComponent() {
                             { position: [40.874512, 14.277654], markerText: "Cat sighting 8" },
                             { position: [40.845678, 14.298765], markerText: "Cat sighting 9" },
                             { position: [40.833456, 14.259876], markerText: "Cat sighting 10" },
-                            ...extraMarkers
+                            ...extraMarkers.map(m => {
+                                // Limita la descrizione a 2-3 righe nel tooltip
+                                const descLines = m.description.split('\n').slice(0, 3).join('\n')
+                                return {
+                                    position: m.position,
+                                    markerText: `# ${m.title}\n\n**${m.breed}**\n\n${descLines}`
+                                }
+                            })
                         ]} />
                     </MarkerClusterGroup>
                 </MapContainer>
@@ -67,10 +76,12 @@ export function MapComponent() {
             <AddMarkerSidebar
                 isOpen={sidebarOpen}
                 selectedBreed={selectedBreed}
-                notes={notes}
+                markerTitle={markerTitle}
+                markerDescription={markerDescription}
                 onClose={closeSidebar}
                 onBreedChange={setSelectedBreed}
-                onNotesChange={setNotes}
+                onTitleChange={setMarkerTitle}
+                onDescriptionChange={setMarkerDescription}
                 onSave={handleSave}
                 onCancel={handleCancel}
             />

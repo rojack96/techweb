@@ -1,6 +1,6 @@
 import { Card, Select, Input, Typography, Button, Space } from "antd"
 import { XMarkdown } from "@ant-design/x-markdown"
-import { breedOptions } from "../../hooks/useMarkerForm"
+import { breedOptions } from "../../../hooks/useMarkerForm"
 
 const { TextArea } = Input
 const { Title } = Typography
@@ -8,10 +8,12 @@ const { Title } = Typography
 interface AddMarkerSidebarProps {
     isOpen: boolean
     selectedBreed: string | undefined
-    notes: string
+    markerTitle: string
+    markerDescription: string
     onClose: () => void
     onBreedChange: (breed: string | undefined) => void
-    onNotesChange: (notes: string) => void
+    onTitleChange: (title: string) => void
+    onDescriptionChange: (description: string) => void
     onSave: () => void
     onCancel: () => void
 }
@@ -19,10 +21,12 @@ interface AddMarkerSidebarProps {
 export function AddMarkerSidebar({
     isOpen,
     selectedBreed,
-    notes,
+    markerTitle,
+    markerDescription,
     onClose,
     onBreedChange,
-    onNotesChange,
+    onTitleChange,
+    onDescriptionChange,
     onSave,
     onCancel,
 }: AddMarkerSidebarProps) {
@@ -62,15 +66,29 @@ export function AddMarkerSidebar({
                         allowClear
                     />
                 </div>
+
                 <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: "block", marginBottom: 8 }}>Note (Markdown)</label>
-                    <TextArea
-                        value={notes}
-                        onChange={(e) => onNotesChange(e.target.value)}
-                        rows={5}
-                        placeholder="Descrizione in markdown"
+                    <label style={{ display: "block", marginBottom: 8 }}>Titolo</label>
+                    <Input
+                        value={markerTitle}
+                        onChange={(e) => onTitleChange(e.target.value)}
+                        placeholder="Es: Gatto tigrato"
+                        style={{ width: "100%" }}
                     />
-                    {notes && (
+                    <small style={{ color: "#999", display: "block", marginTop: 4 }}>
+                        Verrà mostrato come titolo principale nel tooltip
+                    </small>
+                </div>
+
+                <div style={{ marginBottom: 16 }}>
+                    <label style={{ display: "block", marginBottom: 8 }}>Descrizione (Markdown)</label>
+                    <TextArea
+                        value={markerDescription}
+                        onChange={(e) => onDescriptionChange(e.target.value)}
+                        rows={5}
+                        placeholder="Aggiungi dettagli in markdown..."
+                    />
+                    {markerDescription && (
                         <div
                             style={{
                                 marginTop: 12,
@@ -81,12 +99,15 @@ export function AddMarkerSidebar({
                             }}
                         >
                             <small style={{ color: "#666", display: "block", marginBottom: 8 }}>
-                                Anteprima:
+                                Anteprima (prime 2-3 righe nel tooltip):
                             </small>
-                            <XMarkdown>{notes}</XMarkdown>
+                            <div style={{ fontSize: 12, maxHeight: 60, overflow: "hidden" }}>
+                                <XMarkdown>{markerDescription}</XMarkdown>
+                            </div>
                         </div>
                     )}
                 </div>
+
                 <div>
                     <Space style={{ width: "100%" }}>
                         <Button type="primary" onClick={onSave} style={{ flex: 1 }}>

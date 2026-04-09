@@ -2,8 +2,10 @@ import { useState } from "react"
 
 interface ExtraMarker {
   position: [number, number]
-  markerText: string
   id: string
+  title: string
+  description: string
+  breed: string
 }
 
 interface PendingMarker {
@@ -25,11 +27,19 @@ export function useMarkerForm() {
   const [extraMarkers, setExtraMarkers] = useState<ExtraMarker[]>([])
   const [pendingMarker, setPendingMarker] = useState<PendingMarker | null>(null)
   const [selectedBreed, setSelectedBreed] = useState<string | undefined>(undefined)
-  const [notes, setNotes] = useState("")
+  const [markerTitle, setMarkerTitle] = useState("")
+  const [markerDescription, setMarkerDescription] = useState("")
 
   const handleMarkerPlaced = (position: [number, number]) => {
     const id = Date.now().toString()
-    setExtraMarkers(prev => [...prev, { position, markerText: "Modifica...", id }])
+    // Aggiungi subito il marker placeholder sulla mappa
+    setExtraMarkers(prev => [...prev, {
+      position,
+      id,
+      title: "Modifica...",
+      description: "",
+      breed: ""
+    }])
     setPendingMarker({ position, id })
     setSidebarOpen(true)
   }
@@ -40,12 +50,17 @@ export function useMarkerForm() {
     const breedText = selectedBreed
       ? breedOptions.find(b => b.value === selectedBreed)?.label ?? selectedBreed
       : "Razza non selezionata"
-    const markerText = `${breedText}${notes ? ` - ${notes}` : ""}`
 
+    // Aggiorna il marker esistente con i dati completi
     setExtraMarkers(prev =>
       prev.map(marker =>
         marker.id === pendingMarker.id
-          ? { ...marker, markerText }
+          ? {
+            ...marker,
+            title: markerTitle || "Senza titolo",
+            description: markerDescription,
+            breed: breedText
+          }
           : marker
       )
     )
@@ -53,6 +68,7 @@ export function useMarkerForm() {
   }
 
   const handleCancel = () => {
+    // Rimuovi il marker se l'utente cancella
     if (pendingMarker !== null) {
       setExtraMarkers(prev => prev.filter(marker => marker.id !== pendingMarker.id))
     }
@@ -64,7 +80,8 @@ export function useMarkerForm() {
     setSidebarOpen(false)
     setMarkerMode(false)
     setSelectedBreed(undefined)
-    setNotes("")
+    setMarkerTitle("")
+    setMarkerDescription("")
   }
 
   const closeSidebar = () => {
@@ -79,12 +96,14 @@ export function useMarkerForm() {
     extraMarkers,
     pendingMarker,
     selectedBreed,
-    notes,
+    markerTitle,
+    markerDescription,
     // Setters
     setMarkerMode,
     setSidebarOpen,
     setSelectedBreed,
-    setNotes,
+    setMarkerTitle,
+    setMarkerDescription,
     // Handlers
     handleMarkerPlaced,
     handleSave,

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"streetcats-api/configs"
+	"streetcats-api/internal/services/session"
 
 	"github.com/Nerzal/gocloak/v13"
 	"github.com/gin-gonic/gin"
@@ -11,11 +12,21 @@ import (
 	"github.com/rojack96/jinres"
 )
 
-func Auth(config configs.ConfigModel, client *gocloak.GoCloak) gin.HandlerFunc {
+func Auth(config configs.ConfigModel, client *gocloak.GoCloak, sessionService session.ServiceInterfaces) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		jr := jinres.NewJinres()
-		bearerToken := ctx.GetHeader("Authorization")
 
+		sessionID, err := ctx.Cookie("session_id")
+		if err == nil {
+			session, err := sessionService.GetSessionByID(sessionID)
+			if err == nil {
+				ctx.Set("session", session)
+				ctx.Next()
+				return
+			}
+		}
+
+		bearerToken := ctx.GetHeader("Authorization")
 		if bearerToken == "" {
 			jr.Unauthorized().Done(ctx)
 			ctx.Abort()

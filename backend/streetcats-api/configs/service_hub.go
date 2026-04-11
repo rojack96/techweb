@@ -6,14 +6,15 @@ import (
 
 	// external import
 	"github.com/Nerzal/gocloak/v13"
-	//r "github.com/redis/go-redis/v9"
 	"github.com/jackc/pgx/v5/pgxpool"
+	r "github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 
 	// project import
 	"streetcats-api/pkg/keycloak"
 	"streetcats-api/pkg/logger"
 	"streetcats-api/pkg/postgres"
+	"streetcats-api/pkg/redis"
 )
 
 type ServiceHub struct {
@@ -21,8 +22,8 @@ type ServiceHub struct {
 	Config      ConfigModel
 	Log         *zap.Logger
 	Postgis     *pgxpool.Pool
-	//	RedisClient *r.Client
-	Keycloak *gocloak.GoCloak
+	RedisClient *r.Client
+	Keycloak    *gocloak.GoCloak
 }
 
 func NewServiceHub(ctx context.Context) (*ServiceHub, error) {
@@ -58,17 +59,17 @@ func NewServiceHub(ctx context.Context) (*ServiceHub, error) {
 	}
 
 	// redis configuration
-	/*rds := redis.NewClient(s.Config.RedisDb.Enabled,
-		redis.WithHost(s.Config.RedisDb.Host, s.Config.RedisDb.Port),
-		redis.WithDb(5),
-		redis.WithAuth("default", s.Config.RedisDb.Passwd),
+	rds := redis.NewClient(s.Config.Redis.Enabled,
+		redis.WithHost(s.Config.Redis.Host, s.Config.Redis.Port),
+		redis.WithDb(0),
+		redis.WithAuth("default", s.Config.Redis.Passwd),
 		redis.WithZapLogger(s.Log),
 	)
 
 	if s.RedisClient, err = rds.Connect(); err != nil {
 		s.Log.Info("Failed to connect to Redis", zap.Error(err))
 		panic(err)
-	}*/
+	}
 
 	// keycloak configuration
 	kc := keycloak.NewClient(s.Config.Keycloak.Enabled,

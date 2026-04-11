@@ -5,9 +5,12 @@ import (
 	// project imports
 	"streetcats-api/configs"
 	"streetcats-api/internal/controllers"
+	ac "streetcats-api/internal/controllers/auth"
 	sc "streetcats-api/internal/controllers/sightings"
 	sr "streetcats-api/internal/repositories/sightings"
 	"streetcats-api/internal/repositories/users"
+	kcs "streetcats-api/internal/services/keycloak"
+	sess "streetcats-api/internal/services/session"
 	ss "streetcats-api/internal/services/sightings"
 	us "streetcats-api/internal/services/users"
 
@@ -25,13 +28,26 @@ func NewRegister(publicRouter *gin.RouterGroup, protectedRouter *gin.RouterGroup
 	return &Register{publicRouter: publicRouter, protectedRouter: protectedRouter, sh: sh}
 }
 
+func (r *Register) AuthRoutes() {
+
+	kcService := kcs.NewService(r.sh.Log, r.sh.Config, r.sh.Keycloak)
+	sessionService := sess.NewService(r.sh.Log, r.sh.Config, r.sh.Keycloak, r.sh.RedisClient)
+	controller := ac.NewAuthController(r.sh.Log, kcService, sessionService)
+
+	authGroup := r.publicRouter.Group("/auth")
+
+	authGroup.GET("/login", controller.Login)
+	authGroup.GET("/callback", controller.CallbackHandler)
+	authGroup.GET("/logout", controller.Logout)
+}
+
 func (r *Register) UserRoutes() {
 
 	usersRepo := users.NewUsersRepository(r.sh.Postgis)
 	usersService := us.NewUsersService(r.sh.Log, r.sh.Config, r.sh.Keycloak, usersRepo)
 	controller := controllers.NewController(r.sh.Log, usersService)
 
-	userGroup := r.protectedRouter.Group("/user")
+	userGroup := r.publicRouter.Group("/user")
 
 	userGroup.POST("/register", controller.RegisterUser)
 	userGroup.POST("/reset-password", controller.ResetPassword)
@@ -43,6 +59,6 @@ func (r *Register) SightingRoutes() {
 	sightingsService := ss.NewService(r.sh.Log, r.sh.Config, r.sh.Keycloak, sightingsRepo)
 	controller := sc.NewController(r.sh.Log, sightingsService)
 
-	sightingsGroup := r.publicRouter.Group("/sightings")
+	sightingsGroup := r.protectedRouter.Group("/sightings")
 	sightingsGroup.GET("/:animalID/all", controller.AllSightings)
 }

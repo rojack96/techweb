@@ -4,12 +4,15 @@ import (
 	// go imports
 	"net/http"
 	"time"
+
 	// external imports
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
 	// project imports
 	"streetcats-api/api/server/middlewares"
 	"streetcats-api/configs"
+	"streetcats-api/internal/services/session"
 	"streetcats-api/pkg/logger"
 )
 
@@ -59,10 +62,12 @@ func NewRouter(zapWriter *logger.ZapGinWriter, sh *configs.ServiceHub) *gin.Engi
 
 	protectedGroup := r.Group(PrefixPath)
 	if sh.Config.Keycloak.Enabled {
-		protectedGroup.Use(middlewares.Auth(sh.Config, sh.Keycloak))
+		sessionService := session.NewService(sh.Log, sh.Config, sh.Keycloak, sh.RedisClient)
+		protectedGroup.Use(middlewares.Auth(sh.Config, sh.Keycloak, sessionService))
 	}
 
 	register := NewRegister(publicGroup, protectedGroup, sh)
+	register.AuthRoutes()
 	register.UserRoutes()
 	register.SightingRoutes()
 

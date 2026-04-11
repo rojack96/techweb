@@ -13,6 +13,7 @@ export function MapComponent() {
     const {
         markerMode,
         sidebarOpen,
+        // TODO capire gli extraMakers come lavorano
         extraMarkers,
         selectedBreed,
         markerTitle,
@@ -66,7 +67,7 @@ export function MapComponent() {
 
                     <MarkerClusterGroup>
                         <CustomMarkers
-                            markers={[...sightingMarkers]}
+                            markers={[...sightingMarkers, ...extraMarkers]}
                             onExpand={handleExpandMarker}
                         />
                     </MarkerClusterGroup>

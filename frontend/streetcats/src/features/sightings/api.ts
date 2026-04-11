@@ -1,4 +1,3 @@
-
 import { httpClient } from "../../services/httpClient"
 import type { Sighting } from "../../types/sightings"
 import type { ApiResponse } from "../../types/type"

@@ -16,6 +16,7 @@ type ServiceInterfaces interface {
 	ExchangeCode(code string) (*gocloak.JWT, error)
 	GetUserInfo(accessToken string) (*gocloak.UserInfo, error)
 	RefreshToken(refreshToken string) (*gocloak.JWT, error)
+	LoginDirect(username, password string) (*gocloak.JWT, error)
 }
 
 type service struct {
@@ -33,7 +34,7 @@ func NewService(log *zap.Logger, cfg configs.ConfigModel, kc *gocloak.GoCloak) S
 func (k *service) GetLoginURL(state string) string {
 
 	baseUrl := fmt.Sprintf("%s:%d", k.cfg.Keycloak.Host, k.cfg.Keycloak.Port)
-	redirectURI := fmt.Sprintf("%s:%d/auth/callback", k.cfg.Api.Host, k.cfg.Api.Port)
+	redirectURI := fmt.Sprintf("http://%s:%d/auth/callback", k.cfg.Api.Host, k.cfg.Api.Port)
 
 	authURL := fmt.Sprintf(
 		"%s/realms/%s/protocol/openid-connect/auth",
@@ -66,6 +67,10 @@ func (k *service) ExchangeCode(code string) (*gocloak.JWT, error) {
 
 func (k *service) GetUserInfo(accessToken string) (*gocloak.UserInfo, error) {
 	return k.kc.GetUserInfo(k.ctx, accessToken, k.cfg.Keycloak.Realm)
+}
+
+func (k *service) LoginDirect(username, password string) (*gocloak.JWT, error) {
+	return k.kc.Login(k.ctx, k.cfg.Keycloak.ClientId, k.cfg.Keycloak.ClientSecret, k.cfg.Keycloak.Realm, username, password)
 }
 
 func (k *service) RefreshToken(refreshToken string) (*gocloak.JWT, error) {

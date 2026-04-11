@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -6,8 +6,9 @@ import {
     UserOutlined,
     VideoCameraOutlined,
 } from "@ant-design/icons"
-import { Button, Layout, Menu, theme } from "antd"
+import { Button, Dropdown, Layout, Menu, message, theme } from "antd"
 import { Outlet, useNavigate } from "react-router-dom"
+import { httpClient } from "../../services/httpClient"
 
 const { Header, Sider, Content } = Layout
 
@@ -16,15 +17,24 @@ const { Header, Sider, Content } = Layout
 // Il contenuto principale viene renderizzato all'interno del componente Outlet, che è un placeholder per i componenti figli definiti nelle rotte.
 export function AppLayout() {
     const [collapsed, setCollapsed] = useState(true)
-    const [isAdmin, setIsAdmin] = useState(false)
+    const [isAdmin] = useState(false)
+    const [user, setUser] = useState<{ username: string } | null>(null)
     const navigate = useNavigate()
 
-    // TODO: nel futuro, sostituire con chiamata API reale per login / auth
-    // useEffect(() => {
-    //     fetch('/api/auth/me')
-    //         .then((res) => res.json())
-    //         .then((user) => setIsAdmin(user.role === 'admin'))
-    // }, [])
+    useEffect(() => {
+        const loadUser = async () => {
+            try {
+                const data = await httpClient<{ username: string }>("/auth/me")
+                if (data?.username) {
+                    setUser({ username: data.username })
+                }
+            } catch {
+                setUser(null)
+            }
+        }
+
+        loadUser()
+    }, [])
 
     const {
         token: { colorBgContainer },
@@ -63,11 +73,34 @@ export function AppLayout() {
                             )}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', minWidth: 48 }}>
-                            <Button
-                                type="text"
-                                icon={<UserOutlined />}
-                                onClick={() => navigate('/login')}
-                            />
+                            <Dropdown menu={{
+                                items: user ? [
+                                    { key: "info", label: `Ciao ${user.username}`, disabled: true },
+                                    { type: "divider" },
+                                    { key: "logout", label: "Logout" },
+                                ] : [
+                                    { key: "login", label: "Login" },
+                                ], onClick: async ({ key }) => {
+                                    if (key === "login") {
+                                        navigate("/login")
+                                        return
+                                    }
+                                    if (key === "logout") {
+                                        try {
+                                            await httpClient("/auth/logout", { method: "POST" })
+                                            message.success("Logout effettuato")
+                                        } catch {
+                                            message.error("Errore durante il logout")
+                                        } finally {
+                                            localStorage.removeItem("username")
+                                            setUser(null)
+                                            navigate("/login")
+                                        }
+                                    }
+                                }
+                            }} trigger={["click"]} placement="bottomRight">
+                                <Button type="text" icon={<UserOutlined />} />
+                            </Dropdown>
                         </div>
                     </div>
                 </Header>

@@ -72,7 +72,7 @@ type LOG struct {
 type ConfigModel struct {
 	Api      API      `json:"api" yaml:"api"`
 	Postgis  POSTGIS  `json:"postgis" yaml:"postgis"`
-	Redis    REDIS    `json:"redis_db" yaml:"redis_db"`
+	Redis    REDIS    `json:"redis" yaml:"redis"`
 	Log      LOG      `json:"log" yaml:"log"`
 	Nats     NATS     `json:"nats" yaml:"nats"`
 	Keycloak KEYCLOAK `json:"keycloak" yaml:"keycloak"`

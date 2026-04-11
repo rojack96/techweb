@@ -34,11 +34,14 @@ func (r *Register) AuthRoutes() {
 	sessionService := sess.NewService(r.sh.Log, r.sh.Config, r.sh.Keycloak, r.sh.RedisClient)
 	controller := ac.NewAuthController(r.sh.Log, kcService, sessionService)
 
-	authGroup := r.publicRouter.Group("/auth")
+	authPublicGroup := r.publicRouter.Group("/auth")
 
-	authGroup.GET("/login", controller.Login)
-	authGroup.GET("/callback", controller.CallbackHandler)
-	authGroup.GET("/logout", controller.Logout)
+	authPublicGroup.POST("/login", controller.Login)
+
+	authProtectedGroup := r.protectedRouter.Group("/auth")
+	authProtectedGroup.GET("/me", controller.Me)
+	authProtectedGroup.POST("/logout", controller.Logout)
+
 }
 
 func (r *Register) UserRoutes() {
@@ -59,6 +62,6 @@ func (r *Register) SightingRoutes() {
 	sightingsService := ss.NewService(r.sh.Log, r.sh.Config, r.sh.Keycloak, sightingsRepo)
 	controller := sc.NewController(r.sh.Log, sightingsService)
 
-	sightingsGroup := r.protectedRouter.Group("/sightings")
+	sightingsGroup := r.publicRouter.Group("/sightings")
 	sightingsGroup.GET("/:animalID/all", controller.AllSightings)
 }

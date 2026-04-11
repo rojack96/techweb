@@ -4,13 +4,20 @@ export async function httpClient<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
+  const token = localStorage.getItem("token")
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...((options?.headers ?? {}) as Record<string, string>),
+  }
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  }
+
   const res = await fetch(`${BASE_URL}${endpoint}`, {
+    credentials: "include",
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-      ...options?.headers,
-    },
+    headers,
   })
 
   if (!res.ok) {

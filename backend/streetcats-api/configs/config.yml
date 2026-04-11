@@ -23,7 +23,7 @@ postgis:
     level: "INFO"
 redis:
   enabled: true
-  host: "redis.local"
+  host: "localhost"
   port: 6379
   passwd: "streetcats"
 nats:

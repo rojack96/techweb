@@ -62,7 +62,7 @@ func NewServiceHub(ctx context.Context) (*ServiceHub, error) {
 	rds := redis.NewClient(s.Config.Redis.Enabled,
 		redis.WithHost(s.Config.Redis.Host, s.Config.Redis.Port),
 		redis.WithDb(0),
-		redis.WithAuth("default", s.Config.Redis.Passwd),
+		//redis.WithAuth("default", s.Config.Redis.Passwd),
 		redis.WithZapLogger(s.Log),
 	)
 

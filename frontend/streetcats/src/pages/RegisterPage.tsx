@@ -46,7 +46,7 @@ export function RegisterPage() {
             })
 
             if (response.ok) {
-                const data = await response.json()
+                await response.json()
                 message.success('Registrazione effettuata con successo!')
                 // TODO: Redirect a login o dashboard
             } else {

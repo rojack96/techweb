@@ -1,31 +1,29 @@
 
 
 import { useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
 import { Form, Input, Button, message, Card } from "antd"
-import { Link } from "react-router-dom"
+import { httpClient } from "../services/httpClient"
 
 export function LoginPage() {
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const onFinish = async (values: { username: string; password: string }) => {
         setLoading(true)
         try {
-            // TODO: Sostituire con chiamata API reale
-            const response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const data = await httpClient<{ username?: string }>("/auth/login", {
+                method: "POST",
                 body: JSON.stringify(values),
             })
 
-            if (response.ok) {
-                const data = await response.json()
-                // TODO: Gestire il token o redirect
-                message.success('Login effettuato con successo!')
-            } else {
-                message.error('Credenziali non valide. Riprova.')
-            }
+            const username = data.username ?? values.username
+            localStorage.setItem("username", username)
+
+            message.success("Login effettuato con successo!")
+            navigate("/", { replace: true })
         } catch (error) {
-            message.error('Errore durante il login. Riprova più tardi.')
+            message.error("Credenziali non valide. Riprova.")
         } finally {
             setLoading(false)
         }

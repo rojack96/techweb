@@ -20,5 +20,5 @@ func (c *Controller) AllSightings(ctx *gin.Context) {
 		return
 	}
 
-	c.jinres.OK().Custom("sightings", sightings).Done(ctx)
+	c.jinres.OK().Response(sightings).Done(ctx)
 }

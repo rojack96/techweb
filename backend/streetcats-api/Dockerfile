@@ -1,24 +1,4 @@
-# Stage 1: Build stage
-FROM golang:1.25.7-alpine AS builder
-
-WORKDIR /app
-
-# Install dependencies
-RUN apk add --no-cache git ca-certificates tzdata
-
-# Copy go mod files
-COPY go.mod go.sum ./
-
-# Download dependencies
-RUN go mod download
-
-# Copy source code
-COPY . .
-
-# Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags "-s -w" -o api ./cmd/rest_api/main.go
-
-# Stage 2: Runtime stage
+# Use pre-compiled binary from build.sh
 FROM alpine:latest
 
 WORKDIR /app
@@ -26,11 +6,11 @@ WORKDIR /app
 # Install runtime dependencies
 RUN apk add --no-cache ca-certificates tzdata
 
-# Copy the binary from builder
-COPY --from=builder /app/api .
+# Copy the binary from build artifacts (context is root directory)
+COPY .build/backend/api .
 
 # Copy config files
-COPY configs/config.yml ./configs/
+COPY backend/streetcats-api/configs/config.yml ./configs/
 
 # Expose port
 EXPOSE 8080

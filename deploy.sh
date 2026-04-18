@@ -2,7 +2,7 @@
 
 ################################################################################
 # TechWeb Deploy Script (Minimalist)
-# Run services with docker-compose
+# Run services with docker compose
 # Usage: ./deploy.sh [up|down|logs|status|help]
 ################################################################################
 
@@ -58,9 +58,9 @@ main() {
     case "$command" in
         up)
             log_info "Starting services..."
-            docker-compose -f "${COMPOSE_FILE}" up -d
+            docker compose -f "${COMPOSE_FILE}" up -d
             log_success "Services started"
-            docker-compose -f "${COMPOSE_FILE}" ps
+            docker compose -f "${COMPOSE_FILE}" ps
             echo ""
             echo "Access:"
             echo "  Frontend:  http://localhost:3000"
@@ -68,20 +68,20 @@ main() {
             ;;
         down)
             log_info "Stopping services..."
-            docker-compose -f "${COMPOSE_FILE}" down
+            docker compose -f "${COMPOSE_FILE}" down
             log_success "Services stopped"
             ;;
         logs)
-            docker-compose -f "${COMPOSE_FILE}" logs -f
+            docker compose -f "${COMPOSE_FILE}" logs -f
             ;;
         logs-api)
-            docker-compose -f "${COMPOSE_FILE}" logs -f api
+            docker compose -f "${COMPOSE_FILE}" logs -f api
             ;;
         logs-ui)
-            docker-compose -f "${COMPOSE_FILE}" logs -f ui
+            docker compose -f "${COMPOSE_FILE}" logs -f ui
             ;;
         status)
-            docker-compose -f "${COMPOSE_FILE}" ps
+            docker compose -f "${COMPOSE_FILE}" ps
             ;;
         help|--help|-h)
             show_help

@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/streetcats-service/api/v1': {
-        target: 'http://localhost:8201',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
       },

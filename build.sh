@@ -128,9 +128,13 @@ build_frontend() {
         log_error "Frontend build failed"
         exit 1
     fi
-    
-    local size=$(du -sh "${FRONTEND_DIR}/dist" | cut -f1)
-    log_success "Frontend built (${size})"
+
+    mkdir -p "${BUILD_DIR}/frontend"
+    rm -rf "${BUILD_DIR}/frontend/dist"
+    mv "${FRONTEND_DIR}/dist" "${BUILD_DIR}/frontend/dist"
+
+    local size=$(du -sh "${BUILD_DIR}/frontend/dist" | cut -f1)
+    log_success "Frontend built (${size}) -> ${BUILD_DIR}/frontend/dist"
 }
 
 build_images() {

@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   # Application Services
   api:
     build:
-      context: ./backend/streetcats-api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend/streetcats-api/Dockerfile
     image: streetcats-api:latest
     container_name: techweb-api
     environment:
@@ -66,7 +64,7 @@ services:
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak_password
+      POSTGRES_PASSWORD: keycloakpassword
     volumes:
       - keycloak_db_data:/var/lib/postgresql/data
     networks:
@@ -85,8 +83,8 @@ services:
       KC_DB_PASSWORD: keycloak_password
       KC_HTTP_RELATIVE_PATH: /auth
       KC_HOSTNAME_STRICT: "false"
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-password}
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
     command: start-dev
     ports:
       - "8090:8080"

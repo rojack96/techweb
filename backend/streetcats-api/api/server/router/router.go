@@ -24,9 +24,7 @@ func NewRouter(zapWriter *logger.ZapGinWriter, sh *configs.ServiceHub) *gin.Engi
 	}
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{
-			"http://localhost:5173",
-		}, // frontend
+		AllowOrigins: sh.Config.Api.AllowOrigins,
 		AllowMethods: []string{
 			"GET",
 			"POST",

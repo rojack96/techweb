@@ -10,14 +10,15 @@ type SWAGGER struct {
 }
 
 type API struct {
-	Host        string  `json:"host" yaml:"host"`
-	Port        uint16  `json:"port" yaml:"port"`
-	User        string  `json:"user" yaml:"user"`
-	Name        string  `json:"name" yaml:"name"`
-	Version     string  `json:"version" yaml:"version"`
-	Description string  `json:"description" yaml:"description"`
-	Password    string  `json:"password" yaml:"password"`
-	Swagger     SWAGGER `json:"swagger" yaml:"swagger"`
+	Host         string   `json:"host" yaml:"host"`
+	Port         uint16   `json:"port" yaml:"port"`
+	User         string   `json:"user" yaml:"user"`
+	Name         string   `json:"name" yaml:"name"`
+	Version      string   `json:"version" yaml:"version"`
+	Description  string   `json:"description" yaml:"description"`
+	Password     string   `json:"password" yaml:"password"`
+	Swagger      SWAGGER  `json:"swagger" yaml:"swagger"`
+	AllowOrigins []string `json:"allow_origins" yaml:"allow_origins"`
 }
 
 type NATS struct {

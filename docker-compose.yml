@@ -6,19 +6,19 @@ services:
       dockerfile: ./backend/streetcats-api/Dockerfile
     image: streetcats-api:latest
     container_name: techweb-api
-    environment:
-      PORT: "8080"
-      GIN_MODE: ${GIN_MODE:-debug}
-      DB_HOST: postgis
-      DB_PORT: 5432
-      DB_NAME: ${POSTGRES_DB:-gis}
-      DB_USER: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      KEYCLOAK_URL: http://keycloak:8080
+    # environment:
+      # PORT: "8080"
+      # GIN_MODE: ${GIN_MODE:-debug}
+      # DB_HOST: postgis
+      # DB_PORT: 5432
+      # DB_NAME: ${POSTGRES_DB:-gis}
+      # DB_USER: ${POSTGRES_USER:-postgres}
+      # DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      # REDIS_HOST: redis
+      # REDIS_PORT: 6379
+      # KEYCLOAK_URL: http://keycloak:8080
     ports:
-      - "8080:8080"
+      - "8080:8201"
     depends_on:
       - postgis
       - redis
@@ -113,5 +113,6 @@ volumes:
 
 networks:
   techweb_network:
+    external: true
 
 

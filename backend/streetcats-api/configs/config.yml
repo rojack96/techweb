@@ -10,6 +10,9 @@ api:
       enabled: true
       user: "streetcats"
       passwd: "streetcats"
+  allow_origins:
+    - "http://localhost:5173"
+    - "http://localhost:3000"
 postgis:
   enabled: true
   #host: "postgis.local"

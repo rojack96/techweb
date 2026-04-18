@@ -1,7 +1,7 @@
 ---
 api:
   host: "0.0.0.0"
-  port: 8080
+  port: 8201
   name: "Street Cats API Service"
   version: "v0.1.0"
   swagger:
@@ -10,6 +10,9 @@ api:
       enabled: true
       user: "streetcats"
       passwd: "streetcats"
+  allow_origins:
+    - "http://localhost:5173"
+    - "http://localhost:3000"
 postgis:
   enabled: true
   #host: "postgis.local"

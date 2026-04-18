@@ -143,6 +143,7 @@ build_images() {
     
     # Backend image
     log_info "Building backend image..."
+    cd "${PROJECT_ROOT}"
     docker build -t "${BACKEND_NAME}:${version}" -t "${BACKEND_NAME}:latest" -f "${BACKEND_DIR}/Dockerfile" .
     if [ $? -ne 0 ]; then
         log_error "Backend image build failed"

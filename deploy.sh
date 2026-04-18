@@ -10,6 +10,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.yml"
+BUILD_DIR="${SCRIPT_DIR}/.build"
 
 # Colors
 BLUE='\033[0;34m'
@@ -27,6 +28,20 @@ log_success() {
 
 log_error() {
     echo -e "${RED}✗${NC} $*"
+}
+
+check_build_artifacts() {
+    if [ ! -f "${BUILD_DIR}/backend/api" ]; then
+        log_error "Build artifact missing: ${BUILD_DIR}/backend/api"
+        log_error "Run ./build.sh all or ./build.sh backend first."
+        exit 1
+    fi
+
+    if [ ! -d "${BUILD_DIR}/frontend/dist" ]; then
+        log_error "Frontend build artifact missing: ${BUILD_DIR}/frontend/dist"
+        log_error "Run ./build.sh all or ./build.sh frontend first."
+        exit 1
+    fi
 }
 
 show_help() {
@@ -58,6 +73,7 @@ main() {
     case "$command" in
         up)
             log_info "Starting services..."
+            check_build_artifacts
             docker compose -f "${COMPOSE_FILE}" up -d
             log_success "Services started"
             docker compose -f "${COMPOSE_FILE}" ps

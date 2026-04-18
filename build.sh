@@ -143,8 +143,7 @@ build_images() {
     
     # Backend image
     log_info "Building backend image..."
-    cd "${BACKEND_DIR}"
-    docker build -t "${BACKEND_NAME}:${version}" -t "${BACKEND_NAME}:latest" -f Dockerfile .
+    docker build -t "${BACKEND_NAME}:${version}" -t "${BACKEND_NAME}:latest" -f "${BACKEND_DIR}/Dockerfile" .
     if [ $? -ne 0 ]; then
         log_error "Backend image build failed"
         exit 1
@@ -154,7 +153,7 @@ build_images() {
     # Frontend image
     log_info "Building frontend image..."
     cd "${FRONTEND_DIR}"
-    docker build -t "${FRONTEND_NAME}:${version}" -t "${FRONTEND_NAME}:latest" -f Dockerfile .
+    docker build -t "${FRONTEND_NAME}:${version}" -t "${FRONTEND_NAME}:latest" -f "${FRONTEND_DIR}/Dockerfile" .
     if [ $? -ne 0 ]; then
         log_error "Frontend image build failed"
         exit 1

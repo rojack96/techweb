@@ -10,7 +10,7 @@ RUN apk add --no-cache ca-certificates tzdata
 COPY .build/backend/api .
 
 # Copy config files
-COPY backend/streetcats-api/configs/config.yml ./configs/
+COPY backend/streetcats-api/configs/config.production.yml ./configs/config.yml
 
 # Expose port
 EXPOSE 8080

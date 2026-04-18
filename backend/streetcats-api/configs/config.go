@@ -13,10 +13,24 @@ import (
 )
 
 func Config() (ConfigModel, error) {
-	// retrieve file config.yml
+	// retrieve file config.yml from source tree first
 	_, filename, _, _ := runtime.Caller(0)
 	dir := filepath.Dir(filename)
-	config, err := defaultConfig(filepath.Join(dir, "config.yml"))
+	configPath := filepath.Join(dir, "config.yml")
+
+	if _, err := os.Stat(configPath); err != nil {
+		// if the source path does not exist in the runtime container, fall back to executable-relative config path
+		execPath, execErr := os.Executable()
+		if execErr == nil {
+			execDir := filepath.Dir(execPath)
+			altPath := filepath.Join(execDir, "configs", "config.yml")
+			if _, altErr := os.Stat(altPath); altErr == nil {
+				configPath = altPath
+			}
+		}
+	}
+
+	config, err := defaultConfig(configPath)
 	if err != nil {
 		return ConfigModel{}, fmt.Errorf("error loading config: %w", err)
 	}

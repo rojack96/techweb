@@ -88,7 +88,7 @@ func (kc *Client) Connect() (*gocloak.GoCloak, error) {
 
 	kc.log.Debug(LogPrefix + " service enabled")
 
-	host := fmt.Sprintf("%s:%d", kc.host, kc.port)
+	host := fmt.Sprintf("%s:%d/auth", kc.host, kc.port)
 	client := gocloak.NewClient(host)
 
 	if _, err = client.LoginClient(kc.ctx, kc.clientId, kc.clientSecret, kc.realm); err != nil {

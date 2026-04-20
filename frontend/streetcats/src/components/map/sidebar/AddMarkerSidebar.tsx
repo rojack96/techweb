@@ -1,6 +1,5 @@
 import { Card, Select, Input, Typography, Button, Space } from "antd"
 import { XMarkdown } from "@ant-design/x-markdown"
-import { breedOptions } from "../../../hooks/useMarkerForm"
 
 const { TextArea } = Input
 const { Title } = Typography
@@ -10,6 +9,7 @@ interface AddMarkerSidebarProps {
     selectedBreed: string | undefined
     markerTitle: string
     markerDescription: string
+    breedOptions: { value: string; label: string }[]
     onClose: () => void
     onBreedChange: (breed: string | undefined) => void
     onTitleChange: (title: string) => void
@@ -23,6 +23,7 @@ export function AddMarkerSidebar({
     selectedBreed,
     markerTitle,
     markerDescription,
+    breedOptions,
     onClose,
     onBreedChange,
     onTitleChange,

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useBreedsLookup } from "../features/sightings/hooks"
 
 interface ExtraMarker {
   position: [number, number]
@@ -13,15 +14,14 @@ interface PendingMarker {
   id: string
 }
 
-export const breedOptions = [
-  { value: "siamese", label: "Siamese" },
-  { value: "maine_coon", label: "Maine Coon" },
-  { value: "persian", label: "Persiano" },
-  { value: "ragdoll", label: "Ragdoll" },
-  { value: "sphynx", label: "Sphynx" },
-]
 
 export function useMarkerForm() {
+  const { data: breeds } = useBreedsLookup()
+
+  console.log("Breeds lookup:", breeds)
+
+  const breedOptions = breeds?.map(b => ({ value: b.id.toString(), label: b.name })) || []
+
   const [markerMode, setMarkerMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [extraMarkers, setExtraMarkers] = useState<ExtraMarker[]>([])
@@ -115,6 +115,7 @@ export function useMarkerForm() {
     markerDescription,
     detailSidebarOpen,
     selectedMarkerForDetail,
+    breedOptions,
     // Setters
     setMarkerMode,
     setSidebarOpen,

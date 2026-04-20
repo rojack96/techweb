@@ -20,6 +20,7 @@ export function MapComponent() {
         markerDescription,
         detailSidebarOpen,
         selectedMarkerForDetail,
+        breedOptions,
         setMarkerMode,
         setSelectedBreed,
         setMarkerTitle,
@@ -79,6 +80,7 @@ export function MapComponent() {
                 selectedBreed={selectedBreed}
                 markerTitle={markerTitle}
                 markerDescription={markerDescription}
+                breedOptions={breedOptions}
                 onClose={closeSidebar}
                 onBreedChange={setSelectedBreed}
                 onTitleChange={setMarkerTitle}

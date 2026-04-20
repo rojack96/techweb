@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"streetcats-api/configs"
 	"streetcats-api/internal/dto"
+	"streetcats-api/internal/entities"
 	"streetcats-api/internal/repositories/sightings"
 	"strings"
+	"time"
 
 	"github.com/Nerzal/gocloak/v13"
 	"go.uber.org/zap"
@@ -15,6 +17,7 @@ import (
 type ServiceInterfaces interface {
 	GetAllSightings(ctx context.Context) ([]dto.SightingDTO, error)
 	BreedsLookup(animalId uint64) (*dto.BreedDTO, error)
+	CreateSighting(sighting dto.CreateSightingDTO) (uint64, error)
 }
 
 type Service struct {
@@ -74,4 +77,21 @@ func (s *Service) BreedsLookup(animalId uint64) (*dto.BreedDTO, error) {
 		ID:   breed.ID,
 		Name: breed.Name,
 	}, nil
+}
+
+func (s *Service) CreateSighting(sighting dto.CreateSightingDTO) (uint64, error) {
+	now := time.Now().Unix()
+
+	newSighting := entities.AnimalEntities{
+		AnimalID:    sighting.AnimalID,
+		BreedID:     &sighting.BreedID,
+		Latitude:    sighting.Position[0],
+		Longitude:   sighting.Position[1],
+		Title:       sighting.Title,
+		Description: sighting.Description,
+		SpottedAt:   sighting.SpottedAt,
+		CreatedAt:   now,
+	}
+
+	return s.sightingRepository.CreateSighting(newSighting)
 }

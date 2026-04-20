@@ -67,4 +67,5 @@ func (r *Register) SightingRoutes() {
 
 	sightingsProtectedGroup := r.protectedRouter.Group("/sightings")
 	sightingsProtectedGroup.GET("/:animalID/breeds-lookup", controller.BreedsLookup)
+	sightingsProtectedGroup.POST("/create", controller.CreateSighting)
 }

@@ -70,6 +70,32 @@ func (r *sightingsRepositoryImpl) BreedsLookup(animalId uint64) (*entities.Breed
 	return &breed, nil
 }
 
+func (r *sightingsRepositoryImpl) CreateSighting(sighting entities.AnimalEntities) (uint64, error) {
+	ctx := context.Background()
+	query := `
+		INSERT INTO sightings.animal_entities (animal_id, breed_id, latitude, longitude, title, description, spotted_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING id
+	`
+
+	var id uint64
+	err := r.pg.QueryRow(ctx, query,
+		sighting.AnimalID,
+		sighting.BreedID,
+		sighting.Latitude,
+		sighting.Longitude,
+		sighting.Title,
+		sighting.Description,
+		sighting.SpottedAt,
+	).Scan(&id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
 func NewRepository(pg *pgxpool.Pool) Repository {
 	return &sightingsRepositoryImpl{pg: pg}
 }

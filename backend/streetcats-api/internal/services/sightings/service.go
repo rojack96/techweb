@@ -14,6 +14,7 @@ import (
 
 type ServiceInterfaces interface {
 	GetAllSightings(ctx context.Context) ([]dto.SightingDTO, error)
+	BreedsLookup(animalId uint64) (*dto.BreedDTO, error)
 }
 
 type Service struct {
@@ -61,4 +62,16 @@ func (s *Service) GetAllSightings(ctx context.Context) ([]dto.SightingDTO, error
 	}
 
 	return sightingDTOs, nil
+}
+
+func (s *Service) BreedsLookup(animalId uint64) (*dto.BreedDTO, error) {
+	breed, err := s.sightingRepository.BreedsLookup(animalId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.BreedDTO{
+		ID:   breed.ID,
+		Name: breed.Name,
+	}, nil
 }

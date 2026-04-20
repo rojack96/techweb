@@ -62,6 +62,9 @@ func (r *Register) SightingRoutes() {
 	sightingsService := ss.NewService(r.sh.Log, r.sh.Config, r.sh.Keycloak, sightingsRepo)
 	controller := sc.NewController(r.sh.Log, sightingsService)
 
-	sightingsGroup := r.publicRouter.Group("/sightings")
-	sightingsGroup.GET("/:animalID/all", controller.AllSightings)
+	sightingsPublicGroup := r.publicRouter.Group("/sightings")
+	sightingsPublicGroup.GET("/:animalID/all", controller.AllSightings)
+
+	sightingsProtectedGroup := r.protectedRouter.Group("/sightings")
+	sightingsProtectedGroup.GET("/:animalID/breeds-lookup", controller.BreedsLookup)
 }

@@ -53,6 +53,23 @@ func (r *sightingsRepositoryImpl) GetAllSightings() ([]entities.AnimalEntitiesVi
 	return sightings, nil
 }
 
+func (r *sightingsRepositoryImpl) BreedsLookup(animalId uint64) (*entities.Breed, error) {
+	ctx := context.Background()
+	query := `
+		SELECT id, name
+		FROM sightings.breeds
+		WHERE animal_id = $1
+	`
+
+	var breed entities.Breed
+	err := r.pg.QueryRow(ctx, query, animalId).Scan(&breed.ID, &breed.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return &breed, nil
+}
+
 func NewRepository(pg *pgxpool.Pool) Repository {
 	return &sightingsRepositoryImpl{pg: pg}
 }

@@ -9,3 +9,8 @@ type SightingDTO struct {
 	Description string     `json:"description"`
 	SpottedAt   *int64     `json:"spottedAt"`
 }
+
+type BreedDTO struct {
+	ID   uint64 `json:"id"`
+	Name string `json:"name,omitempty"`
+}

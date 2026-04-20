@@ -16,7 +16,7 @@ import (
 
 type ServiceInterfaces interface {
 	GetAllSightings(ctx context.Context) ([]dto.SightingDTO, error)
-	BreedsLookup(animalId uint64) (*dto.BreedDTO, error)
+	BreedsLookup(animalId uint64) ([]dto.BreedDTO, error)
 	CreateSighting(sighting dto.CreateSightingDTO) (uint64, error)
 }
 
@@ -67,16 +67,22 @@ func (s *Service) GetAllSightings(ctx context.Context) ([]dto.SightingDTO, error
 	return sightingDTOs, nil
 }
 
-func (s *Service) BreedsLookup(animalId uint64) (*dto.BreedDTO, error) {
-	breed, err := s.sightingRepository.BreedsLookup(animalId)
+func (s *Service) BreedsLookup(animalId uint64) ([]dto.BreedDTO, error) {
+
+	breeds, err := s.sightingRepository.BreedsLookup(animalId)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto.BreedDTO{
-		ID:   breed.ID,
-		Name: breed.Name,
-	}, nil
+	result := make([]dto.BreedDTO, len(breeds))
+	for i, breed := range breeds {
+		result[i] = dto.BreedDTO{
+			ID:   breed.ID,
+			Name: breed.Name,
+		}
+	}
+
+	return result, nil
 }
 
 func (s *Service) CreateSighting(sighting dto.CreateSightingDTO) (uint64, error) {

@@ -2,6 +2,7 @@ package sightings
 
 import (
 	"context"
+	"fmt"
 	"streetcats-api/internal/entities"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -53,7 +54,7 @@ func (r *sightingsRepositoryImpl) GetAllSightings() ([]entities.AnimalEntitiesVi
 	return sightings, nil
 }
 
-func (r *sightingsRepositoryImpl) BreedsLookup(animalId uint64) (*entities.Breed, error) {
+func (r *sightingsRepositoryImpl) BreedsLookup(animalId uint64) ([]entities.Breed, error) {
 	ctx := context.Background()
 	query := `
 		SELECT id, name
@@ -61,13 +62,27 @@ func (r *sightingsRepositoryImpl) BreedsLookup(animalId uint64) (*entities.Breed
 		WHERE animal_id = $1
 	`
 
-	var breed entities.Breed
-	err := r.pg.QueryRow(ctx, query, animalId).Scan(&breed.ID, &breed.Name)
+	var breeds []entities.Breed
+	rows, err := r.pg.Query(ctx, query, animalId)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
-	return &breed, nil
+	for rows.Next() {
+		var breed entities.Breed
+		err := rows.Scan(&breed.ID, &breed.Name)
+		if err != nil {
+			return nil, err
+		}
+		breeds = append(breeds, breed)
+	}
+
+	if len(breeds) == 0 {
+		return nil, fmt.Errorf("no breeds found for animal ID: %d", animalId)
+	}
+
+	return breeds, nil
 }
 
 func (r *sightingsRepositoryImpl) CreateSighting(sighting entities.AnimalEntities) (uint64, error) {

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"strconv"
-	"streetcats-api/internal/dto"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,21 +15,16 @@ func (c *Controller) BreedsLookup(ctx *gin.Context) {
 		return
 	}
 
-	breed, err := c.sightingService.BreedsLookup(animalIDUint)
+	breeds, err := c.sightingService.BreedsLookup(animalIDUint)
 	if err != nil {
 		c.jinres.InternalServerError().Message("Failed to lookup breed").Done(ctx)
 		return
 	}
 
-	if breed == nil {
+	if breeds == nil {
 		c.jinres.NotFound().Message("Breed not found for the given animal ID").Done(ctx)
 		return
 	}
 
-	response := &dto.BreedDTO{
-		ID:   breed.ID,
-		Name: breed.Name,
-	}
-
-	c.jinres.OK().Response(response).Done(ctx)
+	c.jinres.OK().Response(breeds).Done(ctx)
 }

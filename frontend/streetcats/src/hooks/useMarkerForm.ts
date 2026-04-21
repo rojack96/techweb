@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useBreedsLookup } from "../features/sightings/hooks"
+import { useBreedsLookup } from "../hooks/sightings"
 
 interface ExtraMarker {
   position: [number, number]

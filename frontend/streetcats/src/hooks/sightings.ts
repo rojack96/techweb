@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query"
-import { createSighting, getBreedsLookup, getSightings } from "./api"
+import { createSighting, getBreedsLookup, getSightings } from "../features/sightings/api"
 
 export function useSightings() {
   return useQuery({
@@ -7,7 +7,6 @@ export function useSightings() {
     queryFn: getSightings,
   })
 }
-
 
 export function useBreedsLookup() {
   return useQuery({

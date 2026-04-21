@@ -7,7 +7,7 @@ import { InsertMarker } from "./button/InsertMarker"
 import { AddMarkerSidebar } from "./sidebar/AddMarkerSidebar"
 import { MarkerDetailSidebar } from "./sidebar/MarkerDetailSidebar"
 import { useMarkerForm } from "../../hooks/useMarkerForm"
-import { useSightings } from "../../features/sightings/hooks"
+import { useSightings } from "../../hooks/sightings"
 
 export function MapComponent() {
     const {

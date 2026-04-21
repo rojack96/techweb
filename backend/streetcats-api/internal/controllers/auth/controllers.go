@@ -77,5 +77,9 @@ func (c *Controller) Me(ctx *gin.Context) {
 		return
 	}
 
-	c.jinres.OK().Custom("username", session.Username).Done(ctx)
+	response := map[string]interface{}{
+		"username": session.Username,
+	}
+
+	c.jinres.OK().Response(response).Done(ctx)
 }
